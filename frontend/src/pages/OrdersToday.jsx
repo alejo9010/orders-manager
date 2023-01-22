@@ -79,7 +79,6 @@ function OrdersToday() {
       dispatch(OrderReset());
     }
     if (serverIsError) {
-      toast.error(serverMessage);
       dispatch(OrderReset());
     }
 

@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/static/css/main.66b7f588.css",
+    "main.js": "/static/js/main.d06e4ddc.js",
+    "static/js/787.cda612ba.chunk.js": "/static/js/787.cda612ba.chunk.js",
+    "static/media/goblin.svg": "/static/media/goblin.30eef8b33ee9f35b05378e6f3721a701.svg",
+    "index.html": "/index.html",
+    "main.66b7f588.css.map": "/static/css/main.66b7f588.css.map",
+    "main.d06e4ddc.js.map": "/static/js/main.d06e4ddc.js.map",
+    "787.cda612ba.chunk.js.map": "/static/js/787.cda612ba.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.66b7f588.css",
+    "static/js/main.d06e4ddc.js"
+  ]
+}
