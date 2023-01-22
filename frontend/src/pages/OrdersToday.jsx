@@ -196,10 +196,15 @@ function OrdersToday() {
   };
   const onOrderSubmit = (e) => {
     e.preventDefault();
+    const orderExists = orders.filter(
+      (order) => order.orderNumber === orderNumber
+    );
     if (isNaN(profit) || isNaN(gold)) {
       toast.error('Profit and gold should be numbers');
     } else if (gold > serverStock) {
       toast.error('Server do not have enought stock');
+    } else if (orderExists) {
+      toast.error('Order exists already');
     } else {
       dispatch(createOrder(orderData));
       dispatch(
