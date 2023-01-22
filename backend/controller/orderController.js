@@ -72,6 +72,30 @@ const updateOrder = asyncHandler(async (req, res) => {
   res.status(200).json(updateNote);
 });
 
+// @desc    Get order
+// @route   Get /api/orders/orderId
+// @access  Private
+const getOrder = asyncHandler(async (req, res) => {
+  //Get user using the id in the JWT
+  const user = await User.findById(req.user.id);
+  if (!user) {
+    res.status(401);
+    throw new Error('User not found');
+  }
+
+  const order = await Order.findById(req.params.orderId);
+  if (!order) {
+    res.status(404);
+    throw new Error('Order not found');
+  }
+  if (order.user.toString() !== req.user.id) {
+    res.status(401);
+    throw new Error('Not Authorized');
+  }
+
+  res.status(200).json(order);
+});
+
 // @desc    Delete order
 // @route   Delete /api/orders/orderId
 // @access  Private
@@ -95,4 +119,4 @@ const deleteOrder = asyncHandler(async (req, res) => {
   await order.remove();
   res.status(200).json(order);
 });
-module.exports = { getOrders, createOrder, updateOrder, deleteOrder };
+module.exports = { getOrders, createOrder, updateOrder, deleteOrder, getOrder };

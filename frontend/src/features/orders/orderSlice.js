@@ -4,10 +4,14 @@ import { toast } from 'react-toastify';
 
 const initialState = {
   orders: [],
+  order: null,
   isError: false,
   isSuccess: false,
   isLoading: false,
   isSuccessDelete: false,
+  isOrderLoading: false,
+  isOrderError: false,
+  isOrderSuccess: false,
   message: '',
 };
 
@@ -51,6 +55,25 @@ export const getOrders = createAsyncThunk(
   }
 );
 
+//Get order
+export const getOrder = createAsyncThunk(
+  'orders/getOrder',
+  async (orderId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await orderService.getOrder(orderId, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      toast.error(message);
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 //Close order
 export const closeOrder = createAsyncThunk(
   'order/close',
@@ -100,6 +123,9 @@ export const orderSlice = createSlice({
       state.isLoading = false;
       state.isSuccessDelete = false;
       state.message = '';
+      state.isOrderLoading = false;
+      state.isOrderError = false;
+      state.isOrderSuccess = false;
     },
   },
   extraReducers: (builder) => {
@@ -117,6 +143,20 @@ export const orderSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
         state.servers = null;
+      })
+      .addCase(getOrder.pending, (state) => {
+        state.isOrderLoading = true;
+      })
+      .addCase(getOrder.fulfilled, (state, action) => {
+        state.isOrderLoading = false;
+        state.isOrderSuccess = true;
+        state.order = action.payload;
+      })
+      .addCase(getOrder.rejected, (state, action) => {
+        state.isOrderLoading = false;
+        state.isOrderError = true;
+        state.message = action.payload;
+        state.order = {};
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.isLoading = false;

@@ -11,6 +11,7 @@ import OrdersToday from './pages/OrdersToday.jsx';
 import Resume from './pages/Resume.jsx';
 import Expenses from './pages/Expenses.jsx';
 import Servers from './pages/Servers.jsx';
+import Order from './pages/Order.jsx';
 import PrivateRoute from './components/PrivateRoute.jsx';
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route element={<WithDashboard />}>
               <Route path="/" element={<OrdersToday />} />
               <Route path="/orders" element={<Orders />} />
+              <Route path="/orders/:orderId" element={<Order />} />
               <Route path="/resume" element={<Resume />} />
               <Route path="/expenses" element={<Expenses />} />
               <Route path="/servers" element={<Servers />} />

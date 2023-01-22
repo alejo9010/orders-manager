@@ -175,7 +175,7 @@ function OrdersToday() {
   const onCloseOrder = (id) => {
     dispatch(closeOrder(id));
   };
-  const onDeleteOrder = (order) => {
+  const onDeleteOrder = (order, server) => {
     const confirmDelete = window.confirm(
       'You really want to delete this order?'
     );
@@ -185,11 +185,8 @@ function OrdersToday() {
         'Want to add the stock back to the server?'
       );
       if (confirmReturnStock) {
-        const orderServer = servers.filter(
-          (server) => server._id === order.server
-        )[0];
         dispatch(
-          setStock({ id: order.server, stock: orderServer.stock + order.gold })
+          setStock({ id: server._id, stock: server.stock + order.gold })
         );
       }
     }

@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
-import { FaEyeSlash } from 'react-icons/fa';
+import React from 'react';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
-import { hideServer, setStock, reset } from '../features/servers/serverSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import SpinnerSmall from './SpinnerSmall';
-import SpinnerFixed from './SpinnerFixed';
-import { FaCopy, FaCheck, FaTrash } from 'react-icons/fa';
+import { FaCopy, FaCheck, FaTrash, FaEye } from 'react-icons/fa';
 
-function OrderItem({ server, order, onCloseOrder, onDeleteOrder }) {
+function OrderItem({
+  server,
+  order,
+  onCloseOrder,
+  onOrderDetails,
+  onDeleteOrder,
+}) {
   const [copied, setCopied] = useState(false);
   const onCopyName = async (e) => {
     if (!copied) {
@@ -22,9 +22,24 @@ function OrderItem({ server, order, onCloseOrder, onDeleteOrder }) {
 
   return (
     <div className="row-5">
-      <button className="delete-btn" onClick={() => onDeleteOrder(order)}>
-        <FaTrash />
-      </button>
+      <div className="icon-group-abs">
+        {onOrderDetails && (
+          <button
+            className="details-btn"
+            onClick={() => onOrderDetails(order._id)}
+          >
+            <FaEye />
+          </button>
+        )}
+        {onDeleteOrder && (
+          <button
+            className="delete-btn"
+            onClick={() => onDeleteOrder(order, server)}
+          >
+            <FaTrash />
+          </button>
+        )}
+      </div>
       <div className="">{server.gameName.substring(0, 8)}..</div>
       <div className="">{server.serverName.substring(0, 15)}..</div>
       <div className="order-name column-character-name">
@@ -34,14 +49,16 @@ function OrderItem({ server, order, onCloseOrder, onDeleteOrder }) {
         </button>
       </div>
       <div className="">{order.gold}</div>
-      <button
-        onClick={() => {
-          if (order.status === 'Open') onCloseOrder(order._id);
-        }}
-        className={`status-${order.status}`}
-      >
-        {order.status}
-      </button>
+      {onCloseOrder && (
+        <button
+          onClick={() => {
+            if (order.status === 'Open') onCloseOrder(order._id);
+          }}
+          className={`status-${order.status}`}
+        >
+          {order.status}
+        </button>
+      )}
     </div>
   );
 }

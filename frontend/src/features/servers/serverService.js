@@ -12,6 +12,17 @@ const getServers = async (token) => {
   return response.data;
 };
 
+//get server
+const getServer = async (serverId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.get(API_URL + serverId, config);
+  return response.data;
+};
+
 //Create new server
 const createServer = async (serverData, token) => {
   const config = {
@@ -58,6 +69,7 @@ const serverService = {
   getServers,
   hideServer,
   setStock,
+  getServer,
 };
 
 export default serverService;

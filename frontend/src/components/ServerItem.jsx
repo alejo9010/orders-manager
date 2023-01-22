@@ -56,9 +56,11 @@ function ServerItem({ server }) {
   };
   return (
     <div className="row-3">
-      <button className="hide-server" onClick={onHideServer}>
-        <FaEyeSlash size={16} />
-      </button>
+      <div className="icon-group-abs">
+        <button className="details-btn" onClick={onHideServer}>
+          <FaEyeSlash />
+        </button>
+      </div>
       <div>{server.gameName}</div>
       <div>{server.serverName}</div>
       <div>
