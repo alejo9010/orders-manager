@@ -7,6 +7,7 @@ const initialState = {
   isError: false,
   isSuccess: false,
   isLoading: false,
+  isSuccessDelete: false,
   message: '',
 };
 
@@ -69,6 +70,26 @@ export const closeOrder = createAsyncThunk(
     }
   }
 );
+
+//Delete order
+export const deleteOrder = createAsyncThunk(
+  'order/delete',
+  async (orderId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await orderService.deleteOrder(orderId, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      toast.error(message);
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const orderSlice = createSlice({
   name: 'order',
   initialState,
@@ -77,6 +98,7 @@ export const orderSlice = createSlice({
       state.isError = false;
       state.isSuccess = false;
       state.isLoading = false;
+      state.isSuccessDelete = false;
       state.message = '';
     },
   },
@@ -109,6 +131,13 @@ export const orderSlice = createSlice({
         state.orders.map((order) =>
           order._id === action.payload._id ? (order.status = 'Closed') : order
         );
+      })
+      .addCase(deleteOrder.fulfilled, (state, action) => {
+        state.isSuccessDelete = false;
+        const indexOfOrder = state.orders.findIndex(
+          (order) => order._id === action.payload._id
+        );
+        state.orders.splice(indexOfOrder, 1);
       });
   },
 });

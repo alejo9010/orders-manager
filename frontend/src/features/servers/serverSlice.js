@@ -148,6 +148,9 @@ export const serverSlice = createSlice({
       .addCase(hideServer.pending, (state, action) => {
         state.isLoading = true;
       })
+      .addCase(setStock.pending, (state, action) => {
+        state.stockIsLoading = true;
+      })
       .addCase(setStock.fulfilled, (state, action) => {
         state.stockIsLoading = false;
         state.stockIsSuccess = true;
@@ -156,9 +159,6 @@ export const serverSlice = createSlice({
             ? (server.stock = action.payload.stock)
             : server
         );
-      })
-      .addCase(setStock.pending, (state, action) => {
-        state.stockIsLoading = true;
       });
   },
 });

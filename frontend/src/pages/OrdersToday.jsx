@@ -6,13 +6,18 @@ import {
   createOrder,
   getOrders,
   closeOrder,
+  deleteOrder,
 } from '../features/orders/orderSlice';
 import { OrderReset } from '../features/orders/orderSlice';
 import { reset } from '../features/servers/serverSlice';
 import OrderItem from '../components/OrderItem';
 import { FaPaste } from 'react-icons/fa';
 import Modal from 'react-modal';
-import { getDaysCountFromToday, findServerById } from '../helpers/utilities';
+import {
+  isCurrentDay,
+  findServerById,
+  numberWithCommas,
+} from '../helpers/utilities';
 import { toast } from 'react-toastify';
 const customStyles = {
   content: {
@@ -59,6 +64,7 @@ function OrdersToday() {
     isLoading: serverIsLoading,
     isError: serverIsError,
     message: serverMessage,
+    stockIsLoading,
   } = useSelector((state) => state.servers);
   const { orders, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.orders
@@ -88,16 +94,23 @@ function OrdersToday() {
   }, []);
   useEffect(() => {
     createDaySummary();
-  }, [orders]);
+  }, [orders, stockIsLoading]);
 
   const createDaySummary = () => {
     const todayOrders = orders.filter((order) =>
-      getDaysCountFromToday(new Date(order.createdAt))
+      isCurrentDay(new Date(order.createdAt))
     );
     const totalOrders = todayOrders.length;
     const totalProfit = todayOrders.reduce((acc, curr) => acc + curr.profit, 0);
-    const totalGold = todayOrders.reduce((acc, curr) => acc + curr.gold, 0);
-    const AvgGoldPrice = Number.parseFloat(totalProfit / totalGold).toFixed(5);
+    const goldSold = todayOrders.reduce((acc, curr) => acc + curr.gold, 0);
+    const goldInStock = servers
+      .filter((server) => !server.isHidden)
+      .reduce((acc, curr) => acc + curr.stock, 0);
+    const totalGold = `${numberWithCommas(goldSold)} / ${numberWithCommas(
+      goldSold + goldInStock
+    )}`;
+    let AvgGoldPrice = Number.parseFloat(totalProfit / goldSold).toFixed(5);
+    if (isNaN(AvgGoldPrice)) AvgGoldPrice = 0;
     setDaySummary({ totalOrders, totalProfit, totalGold, AvgGoldPrice });
   };
 
@@ -163,7 +176,25 @@ function OrdersToday() {
   const onCloseOrder = (id) => {
     dispatch(closeOrder(id));
   };
-
+  const onDeleteOrder = (order) => {
+    const confirmDelete = window.confirm(
+      'You really want to delete this order?'
+    );
+    if (confirmDelete) {
+      dispatch(deleteOrder(order._id));
+      const confirmReturnStock = window.confirm(
+        'Want to add the stock back to the server?'
+      );
+      if (confirmReturnStock) {
+        const orderServer = servers.filter(
+          (server) => server._id === order.server
+        )[0];
+        dispatch(
+          setStock({ id: order.server, stock: orderServer.stock + order.gold })
+        );
+      }
+    }
+  };
   const onOrderSubmit = (e) => {
     e.preventDefault();
     if (isNaN(profit) || isNaN(gold)) {
@@ -310,16 +341,14 @@ function OrdersToday() {
 
         {orders.map((order) => {
           const serverOfOrder = findServerById(servers, order.server);
-          if (
-            getDaysCountFromToday(new Date(order.createdAt)) &&
-            serverOfOrder
-          ) {
+          if (isCurrentDay(new Date(order.createdAt)) && serverOfOrder) {
             return (
               <OrderItem
                 key={order._id}
                 server={serverOfOrder}
                 order={order}
                 onCloseOrder={onCloseOrder}
+                onDeleteOrder={onDeleteOrder}
               />
             );
           }

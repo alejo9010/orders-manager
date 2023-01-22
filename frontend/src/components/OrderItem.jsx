@@ -6,9 +6,9 @@ import { hideServer, setStock, reset } from '../features/servers/serverSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import SpinnerSmall from './SpinnerSmall';
 import SpinnerFixed from './SpinnerFixed';
-import { FaCopy, FaCheck } from 'react-icons/fa';
+import { FaCopy, FaCheck, FaTrash } from 'react-icons/fa';
 
-function OrderItem({ server, order, onCloseOrder }) {
+function OrderItem({ server, order, onCloseOrder, onDeleteOrder }) {
   const [copied, setCopied] = useState(false);
   const onCopyName = async (e) => {
     if (!copied) {
@@ -22,6 +22,9 @@ function OrderItem({ server, order, onCloseOrder }) {
 
   return (
     <div className="row-5">
+      <button className="delete-btn" onClick={() => onDeleteOrder(order)}>
+        <FaTrash />
+      </button>
       <div className="">{server.gameName}</div>
       <div className="">{server.serverName}</div>
       <div className="order-name column-character-name">
