@@ -203,8 +203,8 @@ function OrdersToday() {
       toast.error('Profit and gold should be numbers');
     } else if (gold > serverStock) {
       toast.error('Server do not have enought stock');
-    } else if (orderExists) {
-      toast.error('Order exists already');
+    } else if (orderExists.length > 0) {
+      toast.error(`Order ${orderNumber} exists already`);
     } else {
       dispatch(createOrder(orderData));
       dispatch(

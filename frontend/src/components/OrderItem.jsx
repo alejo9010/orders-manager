@@ -25,8 +25,8 @@ function OrderItem({ server, order, onCloseOrder, onDeleteOrder }) {
       <button className="delete-btn" onClick={() => onDeleteOrder(order)}>
         <FaTrash />
       </button>
-      <div className="">{server.gameName}</div>
-      <div className="">{server.serverName}</div>
+      <div className="">{server.gameName.substring(0, 8)}..</div>
+      <div className="">{server.serverName.substring(0, 15)}..</div>
       <div className="order-name column-character-name">
         <span>{order.characterName}</span>
         <button onClick={onCopyName} className="copy-btn order-name">
