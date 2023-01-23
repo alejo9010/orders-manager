@@ -298,7 +298,7 @@ a:active {
 .btn-sidenav {
   display: flex;
   align-items: center;
-  justify-content: start;
+  justify-content: flex-start;
   gap: 1rem;
   color: #087f5b;
 
@@ -428,8 +428,8 @@ a:active {
 
 .dashboard-bar {
   display: flex;
-  justify-content: end;
-  justify-self: end;
+  justify-content: flex-end;
+  justify-self: flex-end;
   align-self: center;
   width: 100%;
 }
@@ -521,8 +521,53 @@ a:active {
   color: #fff;
   padding: 1rem 2rem;
   border-radius: 100px;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: 2fr 2fr 2fr 1fr 1.8fr;
 }
+.header-row-2 {
+  display: grid;
+  position: relative;
+  justify-items: center;
+  align-items: center;
+  background-color: #c92a2a;
+  color: #fff;
+  padding: 1rem 2rem;
+  border-radius: 100px;
+  grid-template-columns: 1fr 3fr;
+}
+.row-2 {
+  position: relative;
+  font-weight: 600;
+  font-size: 1.4rem;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  background-color: #ff6b6b;
+  color: #fff;
+  padding: 1rem 2rem;
+  border-radius: 100px;
+  grid-template-columns: 1fr 3fr;
+}
+.row-2:hover {
+  background-color: #c92a2a;
+}
+.row-5 {
+  position: relative;
+  font-weight: 600;
+  font-size: 1.4rem;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  background-color: #20c997;
+  color: #fff;
+  padding: 1rem 2rem;
+  border-radius: 100px;
+  grid-template-columns: 2fr 2fr 2fr 1fr 1.8fr;
+}
+.row-3:hover,
+.row-5:hover {
+  background-color: #087f5b;
+}
+
 .icon-group-abs {
   position: absolute;
   right: 2rem;
@@ -564,18 +609,7 @@ a:active {
 .details-btn:active {
   transform: scale(1.1);
 }
-.row-5 {
-  position: relative;
-  font-weight: 600;
-  display: grid;
-  justify-items: center;
-  align-items: center;
-  background-color: #20c997;
-  color: #fff;
-  padding: 1rem 2rem;
-  border-radius: 100px;
-  grid-template-columns: repeat(5, 1fr);
-}
+
 .hide-server:hover {
   transform: scale(1.2);
 }
@@ -584,10 +618,6 @@ a:active {
   transform: scale(1.4);
 }
 
-.row-3:hover,
-.row-5:hover {
-  background-color: #087f5b;
-}
 .row-3 input {
   background-color: transparent;
   border: 0;
@@ -601,4 +631,76 @@ a:active {
 
 .row-3 input:focus {
   border-bottom: 1px solid #fff;
+}
+.expense-layout {
+  display: grid;
+  grid-template-columns: 1.5fr 0.5fr;
+  gap: 3rem;
+}
+
+.expenses-form {
+  display: flex;
+  height: auto;
+  flex-direction: column;
+  color: #fff;
+  background-color: #c92a2a;
+  padding: 2rem;
+  border-radius: 20px;
+}
+.expenses-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.expenses-form input,
+.expenses-form textarea,
+.expenses-form button {
+  border: 0;
+  padding: 1rem 2rem;
+  border-radius: 100px;
+}
+
+.expenses-form button {
+  color: #fff;
+  font-size: 2rem;
+  background-color: #ff6b6b;
+}
+
+.expenses-form button:hover {
+  background-color: #fa5252;
+}
+.expenses-form button:active {
+  background-color: #f03e3e;
+}
+.calendar-size {
+  width: 100%;
+  height: 100%;
+}
+.report-layout {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+  align-items: center;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+.report-card-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+}
+.report-card-title {
+  margin-bottom: 1rem;
+}
+.report-card {
+  box-shadow: 18px 18px 13px -20px rgba(0, 0, 0, 0.43);
+
+  color: #fff;
+  border-radius: 20px;
+  padding: 2rem;
+  height: 100%;
+  background-color: #099268;
+  width: 100%;
 }

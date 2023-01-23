@@ -42,7 +42,7 @@ const createServer = asyncHandler(async (req, res) => {
     throw new Error('User not found');
   }
 
-  server = await Server.create({
+  const server = await Server.create({
     gameName,
     serverName,
     user: req.user.id,

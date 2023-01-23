@@ -17,6 +17,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/servers', require('./routes/serverRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
+app.use('/api/expenses', require('./routes/expenseRoute'));
+// app.use('api/expenses');
 //serve frontend
 if (process.env.NODE_ENV == 'production') {
   //Set build folder as static

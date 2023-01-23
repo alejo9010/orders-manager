@@ -123,9 +123,6 @@ export const orderSlice = createSlice({
       state.isLoading = false;
       state.isSuccessDelete = false;
       state.message = '';
-      state.isOrderLoading = false;
-      state.isOrderError = false;
-      state.isOrderSuccess = false;
     },
   },
   extraReducers: (builder) => {
@@ -145,25 +142,28 @@ export const orderSlice = createSlice({
         state.servers = null;
       })
       .addCase(getOrder.pending, (state) => {
-        state.isOrderLoading = true;
+        state.isLoading = true;
       })
       .addCase(getOrder.fulfilled, (state, action) => {
-        state.isOrderLoading = false;
-        state.isOrderSuccess = true;
+        state.isLoading = false;
+        state.isSuccess = true;
         state.order = action.payload;
       })
       .addCase(getOrder.rejected, (state, action) => {
-        state.isOrderLoading = false;
-        state.isOrderError = true;
+        state.isLoading = false;
+        state.isError = true;
         state.message = action.payload;
         state.order = {};
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.orders.push(action.payload);
+        state.orders.unshift(action.payload);
       })
       .addCase(createOrder.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(closeOrder.pending, (state, action) => {
         state.isLoading = true;
       })
       .addCase(closeOrder.fulfilled, (state, action) => {

@@ -9,7 +9,9 @@ const getServers = async (token) => {
     },
   };
   const response = await axios.get(API_URL, config);
-  return response.data;
+  return response.data
+    .sort((a, b) => a.serverName.localeCompare(b.serverName))
+    .sort((a, b) => a.gameName.localeCompare(b.gameName));
 };
 
 //get server

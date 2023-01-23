@@ -7,6 +7,7 @@ import Pagination from '../components/Pagination';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { getOrders, OrderReset } from '../features/orders/orderSlice';
+import SpinnerFixed from '../components/SpinnerFixed';
 function Orders() {
   const { orders, isSuccess, isLoading, isError } = useSelector(
     (state) => state.orders
@@ -18,6 +19,11 @@ function Orders() {
     dispatch(getOrders());
     dispatch(getServers());
   }, []);
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(OrderReset());
+    }
+  }, [isSuccess]);
   const onCloseOrder = (id) => {
     dispatch(closeOrder(id));
     dispatch(OrderReset());
@@ -39,12 +45,14 @@ function Orders() {
     }
   };
   const onOrderDetails = (orderId) => {
+    console.log(orderId);
     navigate(orderId);
   };
+  if (isLoading) return <SpinnerFixed />;
   return (
     <main className="dashboard-main">
       <div className="dashboard-container">
-        <div className="dashboard-bar">f</div>
+        <div className="dashboard-bar"></div>
       </div>
       <div className="dashboard-table">
         <div className="header-row-5">
@@ -55,15 +63,25 @@ function Orders() {
           <div>Status</div>
         </div>
 
-        {orders && (
-          <Pagination
-            ordersData={orders}
-            serversData={servers}
-            onCloseOrder={onCloseOrder}
-            onOrderDetails={onOrderDetails}
-            onDeleteOrder={onDeleteOrder}
-          />
-        )}
+        {
+          <Pagination>
+            {orders.map((order) => {
+              const serverOfOrder = findServerById(servers, order.server);
+              if (serverOfOrder) {
+                return (
+                  <OrderItem
+                    key={order._id}
+                    server={serverOfOrder}
+                    order={order}
+                    onCloseOrder={onCloseOrder}
+                    onDeleteOrder={onDeleteOrder}
+                    onOrderDetails={onOrderDetails}
+                  />
+                );
+              }
+            })}
+          </Pagination>
+        }
       </div>
     </main>
   );

@@ -13,8 +13,8 @@ const getOrders = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error('User not found');
   }
-  const servers = await Order.find({ user: req.user.id });
-  res.status(200).json(servers);
+  const orders = await Order.find({ user: req.user.id });
+  res.status(200).json(orders);
 });
 
 // @desc    Create new order
@@ -42,7 +42,7 @@ const createOrder = asyncHandler(async (req, res) => {
     characterName: req.body.characterName,
     buyerName: req.body.buyerName,
   });
-  res.send(order);
+  res.status(201).json(order);
 });
 
 // @desc    Update order
@@ -65,11 +65,11 @@ const updateOrder = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error('Not Authorized');
   }
-  const updateNote = await Order.findByIdAndUpdate(
+  const updateOrder = await Order.findByIdAndUpdate(
     req.params.orderId,
     req.body
   );
-  res.status(200).json(updateNote);
+  res.status(200).json(updateOrder);
 });
 
 // @desc    Get order

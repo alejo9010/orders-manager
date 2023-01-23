@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 const API_URL = '/api/orders/';
 //Get all orders
 const getOrders = async (token) => {
@@ -9,7 +8,9 @@ const getOrders = async (token) => {
     },
   };
   const response = await axios.get(API_URL, config);
-  return response.data;
+  return response.data.sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
 };
 
 //Create new order

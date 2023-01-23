@@ -81,9 +81,9 @@ function WithDashboard() {
               <p className="sidebar-name">Expenses</p>
             </Link>
             <Link
-              to="/resume"
-              className={`btn-sidenav ${pathname === '/resume' && 'active'}`}
-              onClick={(e) => setPathname('/resume')}
+              to="/report"
+              className={`btn-sidenav ${pathname === '/report' && 'active'}`}
+              onClick={(e) => setPathname('/report')}
             >
               <FaChartBar />
               <p className="sidebar-name">Reports</p>

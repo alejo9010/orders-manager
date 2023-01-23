@@ -8,7 +8,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Orders from './pages/Orders.jsx';
 import OrdersToday from './pages/OrdersToday.jsx';
-import Resume from './pages/Resume.jsx';
+import Report from './pages/Report.jsx';
 import Expenses from './pages/Expenses.jsx';
 import Servers from './pages/Servers.jsx';
 import Order from './pages/Order.jsx';
@@ -23,7 +23,7 @@ function App() {
               <Route path="/" element={<OrdersToday />} />
               <Route path="/orders" element={<Orders />} />
               <Route path="/orders/:orderId" element={<Order />} />
-              <Route path="/resume" element={<Resume />} />
+              <Route path="/report" element={<Report />} />
               <Route path="/expenses" element={<Expenses />} />
               <Route path="/servers" element={<Servers />} />
             </Route>

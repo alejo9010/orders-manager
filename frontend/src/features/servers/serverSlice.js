@@ -169,7 +169,7 @@ export const serverSlice = createSlice({
       .addCase(createServer.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.servers.push(action.payload);
+        state.servers.unshift(action.payload);
       })
       .addCase(createServer.rejected, (state, action) => {
         state.isLoading = false;
