@@ -12,6 +12,7 @@ export const useAuthStatus = () => {
       setLoggedIn(true);
     } else {
       setLoggedIn(false);
+      localStorage.removeItem('user');
     }
     setCheckingStatus(false);
   }, [user]);

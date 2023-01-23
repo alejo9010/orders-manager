@@ -156,64 +156,68 @@ function Report() {
           />
         </div>
         <div className="report-card dateselected">
-          <h1 className="report-card-title">
-            Custom
-            <hr />
-          </h1>
-          <h2>Day</h2>
-          <h4>
-            Profit:{' '}
-            {filteredCustomOrders?.datasToday.reduce(
-              (acc, curr) => acc + curr.profit,
-              0
-            )}
-          </h4>
-          <h4>
-            {' '}
-            Expenses:{' '}
-            {filteredCustomExpenses?.datasToday.reduce(
-              (acc, curr) => acc + curr.amount,
-              0
-            )}
-          </h4>
-          <h4>
-            Total:{' '}
-            {filteredCustomOrders?.datasToday.reduce(
-              (acc, curr) => acc + curr.profit,
-              0
-            ) -
-              filteredCustomExpenses?.datasToday.reduce(
-                (acc, curr) => acc + curr.amount,
-                0
-              ) || ''}
-          </h4>
+          {filteredCustomExpenses && filteredCustomOrders && (
+            <>
+              <h1 className="report-card-title">
+                Custom
+                <hr />
+              </h1>
+              <h2>Day</h2>
+              <h4>
+                Profit:{' '}
+                {filteredCustomOrders?.datasToday.reduce(
+                  (acc, curr) => acc + curr.profit,
+                  0
+                )}
+              </h4>
+              <h4>
+                {' '}
+                Expenses:{' '}
+                {filteredCustomExpenses?.datasToday.reduce(
+                  (acc, curr) => acc + curr.amount,
+                  0
+                )}
+              </h4>
+              <h4>
+                Total:{' '}
+                {filteredCustomOrders?.datasToday.reduce(
+                  (acc, curr) => acc + curr.profit,
+                  0
+                ) -
+                  filteredCustomExpenses?.datasToday.reduce(
+                    (acc, curr) => acc + curr.amount,
+                    0
+                  ) || '0'}
+              </h4>
 
-          <h2>Month</h2>
-          <h4>
-            Profit:{' '}
-            {filteredCustomOrders?.datasMonth.reduce(
-              (acc, curr) => acc + curr.profit,
-              0
-            )}
-          </h4>
-          <h4>
-            Expenses:{' '}
-            {filteredCustomExpenses?.datasMonth.reduce(
-              (acc, curr) => acc + curr.amount,
-              0
-            )}
-          </h4>
-          <h4>
-            Total:{' '}
-            {filteredCustomOrders?.datasMonth.reduce(
-              (acc, curr) => acc + curr.profit,
-              0
-            ) -
-              filteredCustomExpenses?.datasMonth.reduce(
-                (acc, curr) => acc + curr.amount,
-                0
-              ) || ''}
-          </h4>
+              <h2>Month</h2>
+              <h4>
+                Profit:{' '}
+                {filteredCustomOrders?.datasMonth.reduce(
+                  (acc, curr) => acc + curr.profit,
+                  0
+                )}
+              </h4>
+              <h4>
+                Expenses:{' '}
+                {filteredCustomExpenses?.datasMonth.reduce(
+                  (acc, curr) => acc + curr.amount,
+                  0
+                )}
+              </h4>
+              <h4>
+                Total:{' '}
+                {filteredCustomOrders?.datasMonth.reduce(
+                  (acc, curr) => acc + curr.profit,
+                  0
+                ) -
+                  filteredCustomExpenses?.datasMonth.reduce(
+                    (acc, curr) => acc + curr.amount,
+                    0
+                  ) || '0'}
+              </h4>
+            </>
+          )}
         </div>
       </div>
     </main>
