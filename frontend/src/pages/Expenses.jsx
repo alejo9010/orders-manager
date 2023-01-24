@@ -20,11 +20,17 @@ function Expenses() {
   );
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getExpenses());
-  }, []);
+    let ignore = false;
+    if (!ignore) {
+      dispatch(getExpenses());
+    }
 
+    return () => {
+      ignore = true;
+    };
+  }, []);
   useEffect(() => {
-    if (isSuccess) dispatch(reset());
+    dispatch(reset());
   }, [isSuccess]);
   const onChange = (e) => {
     setFormData((prevState) => ({

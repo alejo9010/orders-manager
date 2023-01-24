@@ -85,11 +85,17 @@ function OrdersToday() {
     if (serverIsSuccess) {
       dispatch(reset());
     }
-  }, [isSuccess, serverIsSuccess, isError, serverIsError, dispatch, isLoading]);
+  }, [isSuccess, serverIsSuccess]);
 
   useEffect(() => {
-    dispatch(getServers());
-    dispatch(getOrders());
+    let ignore = false;
+    if (!ignore) {
+      dispatch(getServers());
+      dispatch(getOrders());
+    }
+    return () => {
+      ignore = true;
+    };
   }, []);
   useEffect(() => {
     createDaySummary();

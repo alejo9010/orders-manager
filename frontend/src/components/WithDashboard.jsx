@@ -52,7 +52,7 @@ function WithDashboard() {
               className={`btn-sidenav ${pathname === '/' && 'active'}`}
               onClick={(e) => setPathname('/')}
             >
-              <FaCalendarDay />
+              <FaCalendarDay className="nav-icon" />
               <p className="sidebar-name">Today</p>
             </Link>
             <Link
@@ -60,7 +60,7 @@ function WithDashboard() {
               className={`btn-sidenav ${pathname === '/orders' && 'active'}`}
               onClick={(e) => setPathname('/orders')}
             >
-              <FaShoppingCart />
+              <FaShoppingCart className="nav-icon" />
               <p className="sidebar-name">Orders</p>
             </Link>
             <Link
@@ -68,7 +68,7 @@ function WithDashboard() {
               className={`btn-sidenav ${pathname === '/servers' && 'active'}`}
               onClick={(e) => setPathname('/servers')}
             >
-              <FaServer />
+              <FaServer className="nav-icon" />
 
               <p className="sidebar-name">Servers</p>
             </Link>
@@ -77,7 +77,7 @@ function WithDashboard() {
               className={`btn-sidenav ${pathname === '/expenses' && 'active'}`}
               onClick={(e) => setPathname('/expenses')}
             >
-              <FaWallet />
+              <FaWallet className="nav-icon" />
               <p className="sidebar-name">Expenses</p>
             </Link>
             <Link
@@ -85,7 +85,7 @@ function WithDashboard() {
               className={`btn-sidenav ${pathname === '/report' && 'active'}`}
               onClick={(e) => setPathname('/report')}
             >
-              <FaChartBar />
+              <FaChartBar className="nav-icon" />
               <p className="sidebar-name">Reports</p>
             </Link>
           </div>
