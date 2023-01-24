@@ -297,10 +297,8 @@ a:active {
   height: 100%;
 }
 .loadingSpinnerContainer {
-  top: 0;
   width: 100%;
-  height: 100%;
-  background-color: rgba(95, 95, 95, 0.384);
+  height: 20rem;
   z-index: 5000;
   display: flex;
   justify-content: center;
@@ -310,7 +308,7 @@ a:active {
   width: 64px;
   height: 64px;
   border: 8px solid;
-  border-color: #099268 transparent #20c997 transparent;
+  border-color: #82c91e transparent #20c997 transparent;
   border-radius: 50%;
   animation: spin 1.2s linear infinite;
 }
@@ -461,7 +459,15 @@ a:active {
   font-size: 1.5rem;
   color: #fff;
 }
-
+.copy-btn-mobile {
+  display: inline-block;
+  margin-left: 1rem;
+  background: 0;
+  border: 0;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #fff;
+}
 .grid-cols-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -489,7 +495,7 @@ a:active {
   color: #fff;
   padding: 1rem 2rem;
   border-radius: 100px;
-  grid-template-columns: 2fr 2fr 2fr 1fr 1.8fr;
+  grid-template-columns: 2fr 2fr 2fr 2fr 1fr 1.8fr;
 }
 .header-row-2 {
   display: grid;
@@ -529,10 +535,11 @@ a:active {
   color: #fff;
   padding: 1rem 2rem;
   border-radius: 100px;
-  grid-template-columns: 2fr 2fr 2fr 1fr 1.8fr;
+  grid-template-columns: 2fr 2fr 2fr 2fr 1fr 1.8fr;
 }
 .row-3:hover,
-.row-5:hover {
+.row-5:hover,
+.mobile-order-items:hover {
   background-color: #087f5b;
 }
 
@@ -723,4 +730,38 @@ a:active {
   .nav-icon {
     font-size: 5rem;
   }
+}
+
+.mobile-order-items {
+  background-color: #20c997;
+  color: #fff;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+}
+.mobile-order-container {
+  justify-content: space-between;
+  align-items: center;
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 0.5fr;
+}
+.mobile-order {
+  display: flex;
+  flex-direction: column;
+}
+.mobile-order-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.mobile-order-btns svg {
+  font-size: 2rem;
+}
+.mobile-order-field-group {
+  margin-bottom: 1rem;
+}
+.mobile-order-title {
+  margin-bottom: 1rem;
 }

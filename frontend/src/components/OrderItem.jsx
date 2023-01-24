@@ -8,6 +8,7 @@ function OrderItem({
   onCloseOrder,
   onOrderDetails,
   onDeleteOrder,
+  showOrderNum,
 }) {
   const [copied, setCopied] = useState(false);
   const onCopyName = async (e) => {
@@ -40,15 +41,16 @@ function OrderItem({
           </button>
         )}
       </div>
-      <div className="">{server.gameName.substring(0, 8)}..</div>
-      <div className="">{server.serverName.substring(0, 15)}..</div>
+      <div className="">{order.orderNumber}</div>
+      <div className="">{server.gameName.substring(0, 10)}..</div>
+      <div className="">{server.serverName.substring(0, 19)}..</div>
       <div className="order-name column-character-name">
         <span>{order.characterName}</span>
         <button onClick={onCopyName} className="copy-btn order-name">
           {copied ? <FaCheck /> : <FaCopy />}
         </button>
       </div>
-      <div className="">{order.gold}</div>
+      <div className="">{showOrderNum ? order.orderNumber : order.gold}</div>
       {onCloseOrder && (
         <button
           onClick={() => {

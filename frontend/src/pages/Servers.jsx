@@ -8,7 +8,7 @@ import {
 } from '../features/servers/serverSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import Spinner from '../components/SpinnerFixed';
+import Spinner from '../components/SpinnerInside';
 const customStyles = {
   content: {
     top: '50%',
@@ -78,7 +78,6 @@ function Servers() {
   };
   return (
     <main className="dashboard-main">
-      {isLoading && <Spinner />}
       <div className="dashboard-container">
         <div className="dashboard-bar">
           <button className="btn-round" onClick={() => setModalIsOpen(true)}>
@@ -118,11 +117,12 @@ function Servers() {
             <div>Server</div>
             <div>Stock</div>
           </div>
-          {servers.map((server) => {
-            if (!server.isHidden) {
-              return <ServerItem key={server._id} server={server} />;
-            }
-          })}
+          {(isLoading && <Spinner />) ||
+            servers.map((server) => {
+              if (!server.isHidden) {
+                return <ServerItem key={server._id} server={server} />;
+              }
+            })}
         </div>
       </div>
     </main>

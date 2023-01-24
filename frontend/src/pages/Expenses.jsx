@@ -8,7 +8,7 @@ import {
   deleteExpense,
 } from '../features/expenses/expenseSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import Spinner from '../components/SpinnerFixed';
+import Spinner from '../components/SpinnerInside';
 import 'react-calendar/dist/Calendar.css';
 import ExpenseItem from '../components/ExpenseItem';
 import { toast } from 'react-toastify';
@@ -29,15 +29,18 @@ function Expenses() {
       ignore = true;
     };
   }, []);
+
   useEffect(() => {
     dispatch(reset());
   }, [isSuccess]);
+
   const onChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
   };
+
   const onSubmit = (e) => {
     e.preventDefault();
     if (
@@ -57,7 +60,6 @@ function Expenses() {
       dispatch(deleteExpense(expenseId));
     }
   };
-  if (isLoading) return <Spinner />;
   return (
     <main className="dashboard-main">
       <div className="expense-layout">
@@ -66,17 +68,19 @@ function Expenses() {
             <p>Amount</p>
             <p>Note</p>
           </div>
-          <Pagination>
-            {expenses.map((expense) => {
-              return (
-                <ExpenseItem
-                  onDelete={onDelete}
-                  expense={expense}
-                  key={expense._id}
-                />
-              );
-            })}
-          </Pagination>
+          {(isLoading && <Spinner />) || (
+            <Pagination>
+              {expenses.map((expense) => {
+                return (
+                  <ExpenseItem
+                    onDelete={onDelete}
+                    expense={expense}
+                    key={expense._id}
+                  />
+                );
+              })}
+            </Pagination>
+          )}
         </div>
         <div className="forsm">
           <form action="" onSubmit={onSubmit} className="expenses-form">

@@ -1,5 +1,9 @@
-import Spinner from '../components/SpinnerFixed';
+import Spinner from '../components/SpinnerInside';
+import OrderItem from '../components/OrderItem';
+import OrderItemMobile from '../components/OrderItemMobile';
 import { useState, useEffect } from 'react';
+import { useMediaQuery } from 'react-responsive';
+import mediaQueries from '../configs/mediaQueries';
 import { useSelector, useDispatch } from 'react-redux';
 import { getServers, setStock } from '../features/servers/serverSlice';
 import {
@@ -10,7 +14,6 @@ import {
 } from '../features/orders/orderSlice';
 import { OrderReset } from '../features/orders/orderSlice';
 import { reset } from '../features/servers/serverSlice';
-import OrderItem from '../components/OrderItem';
 import { FaPaste } from 'react-icons/fa';
 import Modal from 'react-modal';
 import {
@@ -34,6 +37,7 @@ const customStyles = {
 
 Modal.setAppElement('#root');
 function OrdersToday() {
+  const isMobile = useMediaQuery(mediaQueries.isMobile);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [serverStock, setServerStock] = useState(null);
   const formInitialState = {
@@ -227,7 +231,6 @@ function OrdersToday() {
   };
   return (
     <main className="dashboard-main">
-      {(isLoading || serverIsError) && <Spinner />}
       <div className="dashboard-container">
         <div className="dashboard-bar">
           <div className="d-flex-100">
@@ -338,28 +341,49 @@ function OrdersToday() {
         </div>
       </div>
       <div className="dashboard-table">
-        <div className="header-row-5">
-          <div>Game</div>
-          <div>Server</div>
-          <div>Name</div>
-          <div>Gold</div>
-          <div>Status</div>
-        </div>
+        {(!isMobile && (
+          <>
+            <div className="header-row-5">
+              <div>Order</div>
+              <div>Game</div>
+              <div>Server</div>
+              <div>Name</div>
+              <div>Gold</div>
+              <div>Status</div>
+            </div>
 
-        {orders.map((order) => {
-          const serverOfOrder = findServerById(servers, order.server);
-          if (isCurrentDay(new Date(order.createdAt)) && serverOfOrder) {
-            return (
-              <OrderItem
-                key={order._id}
-                server={serverOfOrder}
-                order={order}
-                onCloseOrder={onCloseOrder}
-                onDeleteOrder={onDeleteOrder}
-              />
-            );
-          }
-        })}
+            {((isLoading || serverIsError) && <Spinner />) ||
+              orders.map((order) => {
+                const serverOfOrder = findServerById(servers, order.server);
+                if (isCurrentDay(new Date(order.createdAt)) && serverOfOrder) {
+                  return (
+                    <OrderItem
+                      key={order._id}
+                      server={serverOfOrder}
+                      order={order}
+                      onCloseOrder={onCloseOrder}
+                      onDeleteOrder={onDeleteOrder}
+                    />
+                  );
+                }
+              })}
+          </>
+        )) ||
+          ((isLoading || serverIsError) && <Spinner />) ||
+          orders.map((order) => {
+            const serverOfOrder = findServerById(servers, order.server);
+            if (isCurrentDay(new Date(order.createdAt)) && serverOfOrder) {
+              return (
+                <OrderItemMobile
+                  key={order._id}
+                  server={serverOfOrder}
+                  order={order}
+                  onCloseOrder={onCloseOrder}
+                  onDeleteOrder={onDeleteOrder}
+                />
+              );
+            }
+          })}
       </div>
     </main>
   );

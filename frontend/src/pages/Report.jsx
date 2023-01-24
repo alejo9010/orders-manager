@@ -1,8 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Spinner from '../components/SpinnerFixed';
-import Calendar, { MonthView } from 'react-calendar';
+import SpinnerInside from '../components/SpinnerInside';
+import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import ReportCard from '../components/ReportCard';
 import {
   getExpenses,
   reset as expenseReset,
@@ -27,15 +28,38 @@ function Report() {
     dispatch(getExpenses());
     dispatch(getOrders());
   }, []);
-
+  const [orderLoaded, setOrderLoaded] = useState(false);
+  const [expenesesLoaded, setexpenesesLoaded] = useState(false);
+  const [orderResume, setOrderResume] = useState({
+    dayProfit: 0,
+    monthProfit: 0,
+    dayExpenses: 0,
+    monthExpenses: 0,
+    dayGold: 0,
+    monthGold: 0,
+  });
   useEffect(() => {
     if (orderSuccess) {
+      setOrderLoaded(true);
       dispatch(OrderReset());
     }
     if (expensesSuccess) {
+      setexpenesesLoaded(true);
       dispatch(expenseReset());
     }
   }, [orderSuccess, expensesSuccess]);
+
+  useEffect(() => {
+    if ((orderLoaded, expenesesLoaded)) {
+      setOrderResume((state) => ({
+        ...state,
+        dayProfit: ReportDay(orders, 'profit'),
+      }));
+      console.log(orders);
+    } else {
+      console.log('Not loaded');
+    }
+  }, [orderLoaded, expenesesLoaded]);
 
   const ReportDay = (data, propName, date = new Date()) => {
     return data
@@ -62,52 +86,36 @@ function Report() {
       })
       .reduce((acc, curr) => acc + curr[propName], 0);
   };
-
+  const ReportDayMemo = useMemo(
+    (data, propName, date = new Date()) => ReportDay,
+    [dateValue]
+  );
   const onDateChange = (e) => {
     setDateValue(e);
   };
-  if (orderLoading || expensesLoading) return <Spinner />;
+
+  const UseSpinner = orderLoading || expensesLoading;
   return (
     <main className="dashboard-main">
       <div className="report-layout">
-        <div className="report-card month">
-          <h1 className="report-card-title">
-            Today
-            <hr />
-          </h1>
-          <div className="report-card-group">
-            <h3>Profit</h3>
-            <p>{ReportDay(orders, 'profit')}</p>
-          </div>
-          <div className="report-card-group">
-            <h3>Expenses</h3>
-            <p> {ReportDay(expenses, 'amount')}</p>
-          </div>
-          <div className="report-card-group">
-            <h3>Total</h3>
-            <p>{ReportDay(orders, 'profit') - ReportDay(expenses, 'amount')}</p>
-          </div>
-        </div>
-        <div className="report-card month">
-          <h1 className="report-card-title">
-            Month
-            <hr />
-          </h1>
-          <div className="report-card-group">
-            <h3>Profit</h3>
-            <p>{ReportMonth(orders, 'profit')}</p>
-          </div>
-          <div className="report-card-group">
-            <h3>Expenses</h3>
-            <p>{ReportMonth(expenses, 'amount')}</p>
-          </div>
-          <div className="report-card-group">
-            <h3>Total</h3>
-            <p>
-              {ReportMonth(orders, 'profit') - ReportMonth(expenses, 'amount')}
-            </p>
-          </div>
-        </div>
+        {(UseSpinner && <SpinnerInside />) || (
+          <ReportCard
+            profit={ReportDay(orders, 'profit')}
+            expenses={ReportDay(expenses, 'amount')}
+            total={ReportDay(orders, 'profit') - ReportDay(expenses, 'amount')}
+            title={'Today'}
+          />
+        )}
+        {(UseSpinner && <SpinnerInside />) || (
+          <ReportCard
+            profit={ReportMonth(orders, 'profit')}
+            expenses={ReportMonth(expenses, 'amount')}
+            total={
+              ReportMonth(orders, 'profit') - ReportMonth(expenses, 'amount')
+            }
+            title={'Month'}
+          />
+        )}
         <div className="">
           <Calendar
             className="calendar-size"
@@ -120,23 +128,27 @@ function Report() {
             Custom
             <hr />
           </h1>
-          <h2>Day</h2>
-          <h4>Profit: {ReportDay(orders, 'profit', dateValue)}</h4>
-          <h4> Expenses: {ReportDay(expenses, 'amount', dateValue)}</h4>
-          <h4>
-            Total:
-            {ReportDay(orders, 'profit', dateValue) -
-              ReportDay(expenses, 'amount', dateValue)}
-          </h4>
-          <hr />
-          <h2>Month</h2>
-          <h4>Profit: {ReportMonth(orders, 'profit', dateValue)}</h4>
-          <h4>Expenses: {ReportMonth(expenses, 'amount', dateValue)}</h4>
-          <h4>
-            Total:
-            {ReportMonth(orders, 'profit', dateValue) -
-              ReportMonth(expenses, 'amount', dateValue)}
-          </h4>
+          {(UseSpinner && <SpinnerInside />) || (
+            <>
+              <h2>Day</h2>
+              <h4>Profit: {ReportDayMemo(orders, 'profit', dateValue)}</h4>
+              <h4> Expenses: {ReportDayMemo(expenses, 'amount', dateValue)}</h4>
+              <h4>
+                Total:
+                {ReportDayMemo(orders, 'profit', dateValue) -
+                  ReportDayMemo(expenses, 'amount', dateValue)}
+              </h4>
+              <hr />
+              <h2>Month</h2>
+              <h4>Profit: {ReportMonth(orders, 'profit', dateValue)}</h4>
+              <h4>Expenses: {ReportMonth(expenses, 'amount', dateValue)}</h4>
+              <h4>
+                Total:
+                {ReportMonth(orders, 'profit', dateValue) -
+                  ReportMonth(expenses, 'amount', dateValue)}
+              </h4>
+            </>
+          )}
         </div>
       </div>
     </main>

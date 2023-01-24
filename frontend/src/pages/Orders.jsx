@@ -7,7 +7,7 @@ import Pagination from '../components/Pagination';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { getOrders, OrderReset } from '../features/orders/orderSlice';
-import SpinnerFixed from '../components/SpinnerFixed';
+import SpinnerInside from '../components/SpinnerInside';
 function Orders() {
   const { orders, isSuccess, isLoading, isError } = useSelector(
     (state) => state.orders
@@ -48,7 +48,6 @@ function Orders() {
     console.log(orderId);
     navigate(orderId);
   };
-  if (isLoading) return <SpinnerFixed />;
   return (
     <main className="dashboard-main">
       <div className="dashboard-container">
@@ -56,6 +55,8 @@ function Orders() {
       </div>
       <div className="dashboard-table">
         <div className="header-row-5">
+          <div>Order#</div>
+
           <div>Game</div>
           <div>Server</div>
           <div>Name</div>
@@ -63,7 +64,7 @@ function Orders() {
           <div>Status</div>
         </div>
 
-        {
+        {(isLoading && <SpinnerInside />) || (
           <Pagination>
             {orders.map((order) => {
               const serverOfOrder = findServerById(servers, order.server);
@@ -81,7 +82,7 @@ function Orders() {
               }
             })}
           </Pagination>
-        }
+        )}
       </div>
     </main>
   );

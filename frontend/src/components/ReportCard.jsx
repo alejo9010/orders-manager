@@ -1,21 +1,21 @@
-function ReportCard() {
+function ReportCard({ title = 'Title', profit, expenses, total }) {
   return (
     <div className="report-card month">
       <h1 className="report-card-title">
-        Month
+        {title}
         <hr />
       </h1>
       <div className="report-card-group">
         <h3>Profit</h3>
-        <p>{ReportMonth(orders, 'profit')}</p>
+        <p>{profit}</p>
       </div>
       <div className="report-card-group">
         <h3>Expenses</h3>
-        <p>{ReportMonth(expenses, 'amount')}</p>
+        <p> {expenses}</p>
       </div>
       <div className="report-card-group">
         <h3>Total</h3>
-        <p>{ReportMonth(orders, 'profit') - ReportMonth(expenses, 'amount')}</p>
+        <p>{total}</p>
       </div>
     </div>
   );
