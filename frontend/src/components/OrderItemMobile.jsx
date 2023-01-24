@@ -8,6 +8,7 @@ function OrderItemMobile({
   onCloseOrder,
   onOrderDetails,
   onDeleteOrder,
+  markClosed,
 }) {
   const [copied, setCopied] = useState(false);
   const onCopyName = async (e) => {
@@ -22,7 +23,11 @@ function OrderItemMobile({
 
   return (
     <>
-      <div className="mobile-order-items">
+      <div
+        className={`mobile-order-items ${
+          markClosed && order.status === 'Closed' ? 'closed' : ''
+        }`}
+      >
         <h1 className="mobile-order-title">#{order.orderNumber}</h1>
         <div className="mobile-order-container">
           <div className="mobile-order">

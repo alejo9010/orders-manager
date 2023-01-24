@@ -362,6 +362,7 @@ function OrdersToday() {
                       server={serverOfOrder}
                       order={order}
                       onCloseOrder={onCloseOrder}
+                      markClosed={true}
                       onDeleteOrder={onDeleteOrder}
                     />
                   );
@@ -380,6 +381,7 @@ function OrdersToday() {
                   order={order}
                   onCloseOrder={onCloseOrder}
                   onDeleteOrder={onDeleteOrder}
+                  markClosed={true}
                 />
               );
             }

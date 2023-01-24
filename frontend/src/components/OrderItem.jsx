@@ -9,6 +9,7 @@ function OrderItem({
   onOrderDetails,
   onDeleteOrder,
   showOrderNum,
+  markClosed,
 }) {
   const [copied, setCopied] = useState(false);
   const onCopyName = async (e) => {
@@ -22,7 +23,11 @@ function OrderItem({
   };
 
   return (
-    <div className="row-5">
+    <div
+      className={`row-5 ${
+        markClosed && order.status === 'Closed' ? 'closed' : ''
+      }`}
+    >
       <div className="icon-group-abs">
         {onOrderDetails && (
           <button
