@@ -20,14 +20,20 @@ function Order() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    let ignore = false;
     //Get order if not in the state
-    if (!orderLoaded) {
+    console.log('1');
+    if (!orderLoaded && !ignore) {
       dispatch(getOrder(orderId));
     }
     //Then load server if theres an order
     if (orderLoaded) {
       dispatch(getServer(order.server));
     }
+
+    return () => {
+      ignore = true;
+    };
   }, [orderLoaded, serverLoaded, dispatch, orderId, order?.server]);
 
   useEffect(() => {

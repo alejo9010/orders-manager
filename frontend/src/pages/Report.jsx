@@ -12,10 +12,6 @@ import { getOrders, OrderReset } from '../features/orders/orderSlice';
 function Report() {
   const dispatch = useDispatch();
   const [dateValue, setDateValue] = useState(new Date());
-  const [filteredCustomOrders, setFilteredCustomOrders] = useState(null);
-  const [filteredCustomExpenses, setFilteredCustomExpenses] = useState(null);
-  const [filteredExpenses, setFilteredExpenses] = useState(null);
-  const [filteredOrders, setFilteredOrders] = useState(null);
   const {
     expenses,
     isSuccess: expensesSuccess,
@@ -27,25 +23,6 @@ function Report() {
     isLoading: orderLoading,
   } = useSelector((state) => state.orders);
 
-  const filterByDate = (datas, date = new Date()) => {
-    console.log('filterByDate Report.jsx');
-    const datasMonth = datas.filter((data) => {
-      const dataDate = new Date(data?.createdAt);
-      if (
-        dataDate.getMonth() === date.getMonth() &&
-        dataDate.getFullYear() === date.getFullYear()
-      )
-        return data;
-    });
-
-    const datasToday = datasMonth.filter((data) => {
-      const expenseDate = new Date(data?.createdAt);
-      if (expenseDate.getDate() === date.getDate()) return data;
-    });
-
-    return { datasMonth, datasToday };
-  };
-
   useEffect(() => {
     dispatch(getExpenses());
     dispatch(getOrders());
@@ -54,19 +31,42 @@ function Report() {
   useEffect(() => {
     if (orderSuccess) {
       dispatch(OrderReset());
-      setFilteredOrders(filterByDate(orders));
     }
     if (expensesSuccess) {
       dispatch(expenseReset());
-      setFilteredExpenses(filterByDate(expenses));
     }
   }, [orderSuccess, expensesSuccess]);
 
-  const onDateChange = (e) => {
-    setFilteredCustomOrders(filterByDate(orders, e));
-    setFilteredCustomExpenses(filterByDate(expenses, e));
+  const ReportDay = (data, propName, date = new Date()) => {
+    return data
+      .filter((item) => {
+        const itemDate = new Date(item?.createdAt);
+        if (
+          itemDate.getDate() === date.getDate() &&
+          itemDate.getMonth() === date.getMonth() &&
+          itemDate.getFullYear() === date.getFullYear()
+        )
+          return data;
+      })
+      .reduce((acc, curr) => acc + curr[propName], 0);
   };
-  if (orderLoading || expensesLoading || !filteredOrders) return <Spinner />;
+  const ReportMonth = (data, propName, date = new Date()) => {
+    return data
+      .filter((item) => {
+        const itemDate = new Date(item?.createdAt);
+        if (
+          itemDate.getMonth() === date.getMonth() &&
+          itemDate.getFullYear() === date.getFullYear()
+        )
+          return data;
+      })
+      .reduce((acc, curr) => acc + curr[propName], 0);
+  };
+
+  const onDateChange = (e) => {
+    setDateValue(e);
+  };
+  if (orderLoading || expensesLoading) return <Spinner />;
   return (
     <main className="dashboard-main">
       <div className="report-layout">
@@ -77,36 +77,15 @@ function Report() {
           </h1>
           <div className="report-card-group">
             <h3>Profit</h3>
-            <p>
-              {filteredOrders.datasToday.reduce(
-                (acc, curr) => acc + curr.profit,
-                0
-              )}
-            </p>
+            <p>{ReportDay(orders, 'profit')}</p>
           </div>
           <div className="report-card-group">
             <h3>Expenses</h3>
-            <p>
-              {' '}
-              {filteredExpenses.datasToday.reduce(
-                (acc, curr) => acc + curr.amount,
-                0
-              )}
-            </p>
+            <p> {ReportDay(expenses, 'amount')}</p>
           </div>
           <div className="report-card-group">
             <h3>Total</h3>
-            <p>
-              {' '}
-              {filteredOrders.datasToday.reduce(
-                (acc, curr) => acc + curr.profit,
-                0
-              ) -
-                filteredExpenses.datasToday.reduce(
-                  (acc, curr) => acc + curr.amount,
-                  0
-                )}
-            </p>
+            <p>{ReportDay(orders, 'profit') - ReportDay(expenses, 'amount')}</p>
           </div>
         </div>
         <div className="report-card month">
@@ -116,35 +95,16 @@ function Report() {
           </h1>
           <div className="report-card-group">
             <h3>Profit</h3>
-            <p>
-              {filteredOrders.datasMonth.reduce(
-                (acc, curr) => acc + curr.profit,
-                0
-              )}
-            </p>
+            <p>{ReportMonth(orders, 'profit')}</p>
           </div>
           <div className="report-card-group">
             <h3>Expenses</h3>
-            <p>
-              {' '}
-              {filteredExpenses.datasMonth.reduce(
-                (acc, curr) => acc + curr.amount,
-                0
-              )}
-            </p>
+            <p>{ReportMonth(expenses, 'amount')}</p>
           </div>
           <div className="report-card-group">
             <h3>Total</h3>
             <p>
-              {' '}
-              {filteredOrders.datasMonth.reduce(
-                (acc, curr) => acc + curr.profit,
-                0
-              ) -
-                filteredExpenses.datasMonth.reduce(
-                  (acc, curr) => acc + curr.amount,
-                  0
-                )}
+              {ReportMonth(orders, 'profit') - ReportMonth(expenses, 'amount')}
             </p>
           </div>
         </div>
@@ -156,68 +116,27 @@ function Report() {
           />
         </div>
         <div className="report-card dateselected">
-          {filteredCustomExpenses && filteredCustomOrders && (
-            <>
-              <h1 className="report-card-title">
-                Custom
-                <hr />
-              </h1>
-              <h2>Day</h2>
-              <h4>
-                Profit:{' '}
-                {filteredCustomOrders?.datasToday.reduce(
-                  (acc, curr) => acc + curr.profit,
-                  0
-                )}
-              </h4>
-              <h4>
-                {' '}
-                Expenses:{' '}
-                {filteredCustomExpenses?.datasToday.reduce(
-                  (acc, curr) => acc + curr.amount,
-                  0
-                )}
-              </h4>
-              <h4>
-                Total:{' '}
-                {filteredCustomOrders?.datasToday.reduce(
-                  (acc, curr) => acc + curr.profit,
-                  0
-                ) -
-                  filteredCustomExpenses?.datasToday.reduce(
-                    (acc, curr) => acc + curr.amount,
-                    0
-                  ) || '0'}
-              </h4>
-
-              <h2>Month</h2>
-              <h4>
-                Profit:{' '}
-                {filteredCustomOrders?.datasMonth.reduce(
-                  (acc, curr) => acc + curr.profit,
-                  0
-                )}
-              </h4>
-              <h4>
-                Expenses:{' '}
-                {filteredCustomExpenses?.datasMonth.reduce(
-                  (acc, curr) => acc + curr.amount,
-                  0
-                )}
-              </h4>
-              <h4>
-                Total:{' '}
-                {filteredCustomOrders?.datasMonth.reduce(
-                  (acc, curr) => acc + curr.profit,
-                  0
-                ) -
-                  filteredCustomExpenses?.datasMonth.reduce(
-                    (acc, curr) => acc + curr.amount,
-                    0
-                  ) || '0'}
-              </h4>
-            </>
-          )}
+          <h1 className="report-card-title">
+            Custom
+            <hr />
+          </h1>
+          <h2>Day</h2>
+          <h4>Profit: {ReportDay(orders, 'profit', dateValue)}</h4>
+          <h4> Expenses: {ReportDay(expenses, 'amount', dateValue)}</h4>
+          <h4>
+            Total:
+            {ReportDay(orders, 'profit', dateValue) -
+              ReportDay(expenses, 'amount', dateValue)}
+          </h4>
+          <hr />
+          <h2>Month</h2>
+          <h4>Profit: {ReportMonth(orders, 'profit', dateValue)}</h4>
+          <h4>Expenses: {ReportMonth(expenses, 'amount', dateValue)}</h4>
+          <h4>
+            Total:
+            {ReportMonth(orders, 'profit', dateValue) -
+              ReportMonth(expenses, 'amount', dateValue)}
+          </h4>
         </div>
       </div>
     </main>
