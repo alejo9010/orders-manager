@@ -102,7 +102,7 @@ function Report() {
             total={
               ReportDay(orders, 'profit', dateValue) - ReportDay(expenses, 'amount', dateValue)
             }
-            title={'Today'}
+            title={`${dateValue.toLocaleDateString('en-US', { weekday: 'long' })}`}
           />
         )}
         {(UseSpinner && <SpinnerInside />) || (
@@ -113,7 +113,7 @@ function Report() {
             total={
               ReportMonth(orders, 'profit', dateValue) - ReportMonth(expenses, 'amount', dateValue)
             }
-            title={'Month'}
+            title={dateValue.toLocaleDateString('en-US', { month: 'long' })}
           />
         )}
         <div className=''>
