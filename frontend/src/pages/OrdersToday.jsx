@@ -6,21 +6,12 @@ import { useMediaQuery } from 'react-responsive';
 import mediaQueries from '../configs/mediaQueries';
 import { useSelector, useDispatch } from 'react-redux';
 import { getServers, setStock } from '../features/servers/serverSlice';
-import {
-  createOrder,
-  getOrders,
-  closeOrder,
-  deleteOrder,
-} from '../features/orders/orderSlice';
+import { createOrder, getOrders, closeOrder, deleteOrder } from '../features/orders/orderSlice';
 import { OrderReset } from '../features/orders/orderSlice';
 import { reset } from '../features/servers/serverSlice';
 import { FaPaste } from 'react-icons/fa';
 import Modal from 'react-modal';
-import {
-  isCurrentDay,
-  findServerById,
-  numberWithCommas,
-} from '../helpers/utilities';
+import { isCurrentDay, findServerById, numberWithCommas } from '../helpers/utilities';
 import { toast } from 'react-toastify';
 const customStyles = {
   content: {
@@ -59,8 +50,7 @@ function OrdersToday() {
   const [daySummary, setDaySummary] = useState({ ...initDaySummary });
 
   const { totalOrders, totalProfit, totalGold, AvgGoldPrice } = daySummary;
-  const { server, orderNumber, profit, gold, characterName, buyerName } =
-    orderData;
+  const { server, orderNumber, profit, gold, characterName, buyerName } = orderData;
   const dispatch = useDispatch();
   const {
     servers,
@@ -70,9 +60,7 @@ function OrdersToday() {
     message: serverMessage,
     stockIsLoading,
   } = useSelector((state) => state.servers);
-  const { orders, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.orders
-  );
+  const { orders, isLoading, isError, isSuccess, message } = useSelector((state) => state.orders);
   useEffect(() => {
     if (isSuccess) {
       dispatch(OrderReset());
@@ -106,18 +94,14 @@ function OrdersToday() {
   }, [orders, stockIsLoading]);
 
   const createDaySummary = () => {
-    const todayOrders = orders.filter((order) =>
-      isCurrentDay(new Date(order.createdAt))
-    );
+    const todayOrders = orders.filter((order) => isCurrentDay(new Date(order.createdAt)));
     const totalOrders = todayOrders.length;
     const totalProfit = todayOrders.reduce((acc, curr) => acc + curr.profit, 0);
     const goldSold = todayOrders.reduce((acc, curr) => acc + curr.gold, 0);
     const goldInStock = servers
       .filter((server) => !server.isHidden)
       .reduce((acc, curr) => acc + curr.stock, 0);
-    const totalGold = `${numberWithCommas(goldSold)} / ${numberWithCommas(
-      goldSold + goldInStock
-    )}`;
+    const totalGold = `${numberWithCommas(goldSold)} / ${numberWithCommas(goldSold + goldInStock)}`;
     let AvgGoldPrice = Number.parseFloat(totalProfit / goldSold).toFixed(5);
     if (isNaN(AvgGoldPrice)) AvgGoldPrice = 0;
     setDaySummary({ totalOrders, totalProfit, totalGold, AvgGoldPrice });
@@ -145,24 +129,15 @@ function OrdersToday() {
     //Get data sort from lines
     if (lines.length > 20) {
       const pasteOrder = {
-        server:
-          lines[
-            lines.findIndex((string) => string.includes('SERVER '))
-          ].substring(7),
+        server: lines[lines.findIndex((string) => string.includes('SERVER '))].substring(7),
         orderNumber:
-          lines[
-            lines.findIndex((string) => string.includes('SOLD ORDER №'))
-          ].substring(12),
-        profit: +lines[lines.indexOf(' Sold Details') + 7]
-          .split(' ')[1]
-          .substring(1),
+          lines[lines.findIndex((string) => string.includes('SOLD ORDER №'))].substring(12),
+        profit: +lines[lines.indexOf(' Sold Details') + 7].split(' ')[1].substring(1),
         gold: +lines[lines.indexOf(' Sold Details') + 6]
           .replaceAll('\t', ' ')
           .split(' ')[0]
           .replaceAll(',', ''),
-        characterName: lines[
-          lines.findIndex((string) => string.includes('CHARACTER NAME '))
-        ]
+        characterName: lines[lines.findIndex((string) => string.includes('CHARACTER NAME '))]
           .split(' ')[2]
           .trim(),
         buyerName: lines[lines.indexOf('BUYER') - 1].trim(),
@@ -186,26 +161,18 @@ function OrdersToday() {
     dispatch(closeOrder(id));
   };
   const onDeleteOrder = (order, server) => {
-    const confirmDelete = window.confirm(
-      'You really want to delete this order?'
-    );
+    const confirmDelete = window.confirm('You really want to delete this order?');
     if (confirmDelete) {
       dispatch(deleteOrder(order._id));
-      const confirmReturnStock = window.confirm(
-        'Want to add the stock back to the server?'
-      );
+      const confirmReturnStock = window.confirm('Want to add the stock back to the server?');
       if (confirmReturnStock) {
-        dispatch(
-          setStock({ id: server._id, stock: server.stock + order.gold })
-        );
+        dispatch(setStock({ id: server._id, stock: server.stock + order.gold }));
       }
     }
   };
   const onOrderSubmit = (e) => {
     e.preventDefault();
-    const orderExists = orders.filter(
-      (order) => order.orderNumber === orderNumber
-    );
+    const orderExists = orders.filter((order) => order.orderNumber === orderNumber);
     if (isNaN(profit) || isNaN(gold)) {
       toast.error('Profit and gold should be numbers');
     } else if (gold > serverStock) {
@@ -214,9 +181,7 @@ function OrdersToday() {
       toast.error(`Order ${orderNumber} exists already`);
     } else {
       dispatch(createOrder(orderData));
-      dispatch(
-        setStock({ id: orderData.server, stock: serverStock - orderData.gold })
-      );
+      dispatch(setStock({ id: orderData.server, stock: serverStock - orderData.gold }));
       setOrderData({ ...formInitialState });
       setServerStock(null);
       setModalIsOpen(false);
@@ -230,120 +195,106 @@ function OrdersToday() {
     setModalIsOpen(true);
   };
   return (
-    <main className="dashboard-main">
-      <div className="dashboard-container">
-        <div className="dashboard-bar">
-          <div className="d-flex-100">
-            <div className="d-flex">
-              <span className="info-viewer">Orders: {totalOrders}</span>
-              <span className="info-viewer">Profit: {totalProfit}</span>
-              <span className="info-viewer">Gold sold: {totalGold}</span>
-              <span className="info-viewer">Avg: {AvgGoldPrice}</span>
+    <main className='dashboard-main'>
+      <div className='dashboard-container'>
+        <div className='dashboard-bar'>
+          <div className='d-flex-100'>
+            <div className='d-flex'>
+              <span className='info-viewer'>Orders: {totalOrders}</span>
+              <span className='info-viewer'>Profit: {totalProfit}</span>
+              <span className='info-viewer'>Gold sold: {totalGold}</span>
+              <span className='info-viewer'>Avg: {AvgGoldPrice}</span>
             </div>
-            <button className="btn-round" onClick={() => setModalIsOpen(true)}>
+            <button className='btn-round' onClick={() => setModalIsOpen(true)}>
               New Order
             </button>
           </div>
-          <div className="p-relative">
-            <Modal
-              isOpen={modalIsOpen}
-              onRequestClose={closeModal}
-              style={customStyles}
-            >
-              <form className="form " action="" onSubmit={onOrderSubmit}>
-                <div className="form-group">
-                  <h1 className="form-header">
+          <div className='p-relative'>
+            <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles}>
+              <form className='form ' action='' onSubmit={onOrderSubmit}>
+                <div className='form-group'>
+                  <h1 className='form-header'>
                     New Order
                     <button
-                      type="button"
+                      type='button'
                       onClick={onPaste}
-                      className="btn btn-sm p-absolute p-topright"
-                    >
-                      <FaPaste className="paste-icon" />
+                      className='btn btn-sm p-absolute p-topright'>
+                      <FaPaste className='paste-icon' />
                     </button>
                   </h1>
 
                   <select
-                    type="text"
-                    placeholder="Server"
-                    name="server"
+                    type='text'
+                    placeholder='Server'
+                    name='server'
                     onChange={onChange}
                     required
-                    value={server}
-                  >
-                    <option value="" disabled={true}>
+                    value={server}>
+                    <option value='' disabled={true}>
                       Select Server
                     </option>
                     {servers.map(
                       (server) =>
                         !server.isHidden && (
-                          <option
-                            key={server._id}
-                            value={server._id}
-                            stock={server.stock}
-                          >
+                          <option key={server._id} value={server._id} stock={server.stock}>
                             {server.serverName}
                           </option>
                         )
                     )}
                   </select>
-                  {serverStock !== null && serverStock > -1 ? (
-                    <p>Stock: {serverStock}</p>
-                  ) : (
-                    ''
-                  )}
+                  {serverStock !== null && serverStock > -1 ? <p>Stock: {serverStock}</p> : ''}
 
                   <input
-                    type="text"
-                    placeholder="Order #"
-                    name="orderNumber"
+                    type='text'
+                    placeholder='Order #'
+                    name='orderNumber'
                     value={orderNumber}
                     onChange={onChange}
                     required
                   />
                   <input
-                    type="text"
-                    placeholder="Profit"
-                    name="profit"
+                    type='text'
+                    placeholder='Profit'
+                    name='profit'
                     value={profit}
                     onChange={onChange}
                     required
                   />
                   <input
-                    type="text"
-                    placeholder="Gold"
-                    name="gold"
+                    type='text'
+                    placeholder='Gold'
+                    name='gold'
                     value={gold}
                     onChange={onChange}
                     required
                   />
                   <input
-                    type="text"
-                    placeholder="Character Name"
-                    name="characterName"
+                    type='text'
+                    placeholder='Character Name'
+                    name='characterName'
                     value={characterName}
                     onChange={onChange}
                     required
                   />
                   <input
-                    type="text"
-                    placeholder="Buyer Name"
-                    name="buyerName"
+                    type='text'
+                    placeholder='Buyer Name'
+                    name='buyerName'
                     value={buyerName}
                     onChange={onChange}
                     required
                   />
-                  <button className="btn">Submit</button>
+                  <button className='btn'>Submit</button>
                 </div>
               </form>
             </Modal>
           </div>
         </div>
       </div>
-      <div className="dashboard-table">
+      <div className='dashboard-table'>
         {(!isMobile && (
           <>
-            <div className="header-row-5">
+            <div className='header-row-5'>
               <div>Order</div>
               <div>Game</div>
               <div>Server</div>

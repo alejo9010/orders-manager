@@ -4,10 +4,7 @@ import SpinnerInside from '../components/SpinnerInside';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import ReportCard from '../components/ReportCard';
-import {
-  getExpenses,
-  reset as expenseReset,
-} from '../features/expenses/expenseSlice';
+import { getExpenses, reset as expenseReset } from '../features/expenses/expenseSlice';
 import { getOrders, OrderReset } from '../features/orders/orderSlice';
 
 function Report() {
@@ -72,7 +69,8 @@ function Report() {
         )
           return data;
       })
-      .reduce((acc, curr) => acc + curr[propName], 0);
+      .reduce((acc, curr) => acc + curr[propName], 0)
+      .toFixed(2);
   };
   const ReportMonth = (data, propName, date = new Date()) => {
     return data
@@ -84,46 +82,44 @@ function Report() {
         )
           return data;
       })
-      .reduce((acc, curr) => acc + curr[propName], 0);
+      .reduce((acc, curr) => acc + curr[propName], 0)
+      .toFixed(2);
   };
-  const ReportDayMemo = useMemo(
-    (data, propName, date = new Date()) => ReportDay,
-    [dateValue]
-  );
+  const ReportDayMemo = useMemo((data, propName, date = new Date()) => ReportDay, [dateValue]);
   const onDateChange = (e) => {
     setDateValue(e);
   };
 
   const UseSpinner = orderLoading || expensesLoading;
   return (
-    <main className="dashboard-main">
-      <div className="report-layout">
+    <main className='dashboard-main'>
+      <div className='report-layout'>
         {(UseSpinner && <SpinnerInside />) || (
           <ReportCard
-            profit={ReportDay(orders, 'profit')}
-            expenses={ReportDay(expenses, 'amount')}
-            total={ReportDay(orders, 'profit') - ReportDay(expenses, 'amount')}
+            profit={ReportDay(orders, 'profit', dateValue)}
+            gold={ReportDay(orders, 'gold', dateValue)}
+            expenses={ReportDay(expenses, 'amount', dateValue)}
+            total={
+              ReportDay(orders, 'profit', dateValue) - ReportDay(expenses, 'amount', dateValue)
+            }
             title={'Today'}
           />
         )}
         {(UseSpinner && <SpinnerInside />) || (
           <ReportCard
-            profit={ReportMonth(orders, 'profit')}
-            expenses={ReportMonth(expenses, 'amount')}
+            profit={ReportMonth(orders, 'profit', dateValue)}
+            expenses={ReportMonth(expenses, 'amount', dateValue)}
+            gold={ReportMonth(orders, 'gold', dateValue)}
             total={
-              ReportMonth(orders, 'profit') - ReportMonth(expenses, 'amount')
+              ReportMonth(orders, 'profit', dateValue) - ReportMonth(expenses, 'amount', dateValue)
             }
             title={'Month'}
           />
         )}
-        <div className="">
-          <Calendar
-            className="calendar-size"
-            onChange={onDateChange}
-            value={dateValue}
-          />
+        <div className=''>
+          <Calendar className='calendar-size' onChange={onDateChange} value={dateValue} />
         </div>
-        <div className="report-card dateselected">
+        {/* <div className="report-card dateselected">
           <h1 className="report-card-title">
             Custom
             <hr />
@@ -149,7 +145,7 @@ function Report() {
               </h4>
             </>
           )}
-        </div>
+        </div> */}
       </div>
     </main>
   );
