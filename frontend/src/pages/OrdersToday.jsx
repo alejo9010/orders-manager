@@ -126,15 +126,18 @@ function OrdersToday() {
 
     //set all lines into an array
     const lines = clipboardText.split('\r\n');
-    const text =
-      lines[lines.findIndex((string) => string.includes('CHARACTER NAME '))].substring(15);
     //Get data sort from lines
+    // TODO: Delete this test
+    const test = +lines[lines.indexOf(' Sold Details') + 7]
+      .split('\t')[1]
+      .replace(/[^0-9\.]+/g, '');
+    debugger;
     if (lines.length > 20) {
       const pasteOrder = {
         server: lines[lines.findIndex((string) => string.includes('SERVER '))].substring(7),
         orderNumber:
           lines[lines.findIndex((string) => string.includes('SOLD ORDER №'))].substring(12),
-        profit: +lines[lines.indexOf(' Sold Details') + 7].split(' ')[1].substring(1),
+        profit: +lines[lines.indexOf(' Sold Details') + 7].split('\t')[1].replace(/[^0-9\.]+/g, ''),
         gold: +lines[lines.indexOf(' Sold Details') + 6]
           .replaceAll('\t', ' ')
           .split(' ')[0]
