@@ -126,6 +126,8 @@ function OrdersToday() {
 
     //set all lines into an array
     const lines = clipboardText.split('\r\n');
+    const text =
+      lines[lines.findIndex((string) => string.includes('CHARACTER NAME '))].substring(15);
     //Get data sort from lines
     if (lines.length > 20) {
       const pasteOrder = {
@@ -137,9 +139,8 @@ function OrdersToday() {
           .replaceAll('\t', ' ')
           .split(' ')[0]
           .replaceAll(',', ''),
-        characterName: lines[lines.findIndex((string) => string.includes('CHARACTER NAME '))]
-          .split(' ')[2]
-          .trim(),
+        characterName:
+          lines[lines.findIndex((string) => string.includes('CHARACTER NAME '))].substring(15),
         buyerName: lines[lines.indexOf('BUYER') - 1].trim(),
       };
       const serverExist = servers.filter(
@@ -201,7 +202,7 @@ function OrdersToday() {
           <div className='d-flex-100'>
             <div className='d-flex'>
               <span className='info-viewer'>Orders: {totalOrders}</span>
-              <span className='info-viewer'>Profit: {totalProfit}</span>
+              <span className='info-viewer'>Profit: {totalProfit.toFixed(2)}</span>
               <span className='info-viewer'>Gold sold: {totalGold}</span>
               <span className='info-viewer'>Avg: {AvgGoldPrice}</span>
             </div>

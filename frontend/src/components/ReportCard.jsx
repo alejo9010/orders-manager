@@ -26,7 +26,7 @@ function ReportCard({ title = 'Title', profit, expenses, total, gold }) {
       <div className='report-card-group'>
         <div className='report-field total-color'>
           <h3>Total</h3>
-          <p className='report-value'>{total}</p>
+          <p className='report-value'>{total.toFixed(2)}</p>
         </div>
       </div>
     </div>
