@@ -94,28 +94,31 @@ function Report() {
   return (
     <main className='dashboard-main'>
       <div className='report-layout'>
-        {(UseSpinner && <SpinnerInside />) || (
-          <ReportCard
-            profit={ReportDay(orders, 'profit', dateValue)}
-            gold={ReportDay(orders, 'gold', dateValue)}
-            expenses={ReportDay(expenses, 'amount', dateValue)}
-            total={
-              ReportDay(orders, 'profit', dateValue) - ReportDay(expenses, 'amount', dateValue)
-            }
-            title={`${dateValue.toLocaleDateString('en-US', { weekday: 'long' })}`}
-          />
-        )}
-        {(UseSpinner && <SpinnerInside />) || (
-          <ReportCard
-            profit={ReportMonth(orders, 'profit', dateValue)}
-            expenses={ReportMonth(expenses, 'amount', dateValue)}
-            gold={ReportMonth(orders, 'gold', dateValue)}
-            total={
-              ReportMonth(orders, 'profit', dateValue) - ReportMonth(expenses, 'amount', dateValue)
-            }
-            title={dateValue.toLocaleDateString('en-US', { month: 'long' })}
-          />
-        )}
+        <div className='d-flex'>
+          {(UseSpinner && <SpinnerInside />) || (
+            <ReportCard
+              profit={ReportDay(orders, 'profit', dateValue)}
+              gold={ReportDay(orders, 'gold', dateValue)}
+              expenses={ReportDay(expenses, 'amount', dateValue)}
+              total={
+                ReportDay(orders, 'profit', dateValue) - ReportDay(expenses, 'amount', dateValue)
+              }
+              title={`${dateValue.toLocaleDateString('en-US', { weekday: 'long' })}`}
+            />
+          )}
+          {(UseSpinner && <SpinnerInside />) || (
+            <ReportCard
+              profit={ReportMonth(orders, 'profit', dateValue)}
+              expenses={ReportMonth(expenses, 'amount', dateValue)}
+              gold={ReportMonth(orders, 'gold', dateValue)}
+              total={
+                ReportMonth(orders, 'profit', dateValue) -
+                ReportMonth(expenses, 'amount', dateValue)
+              }
+              title={dateValue.toLocaleDateString('en-US', { month: 'long' })}
+            />
+          )}
+        </div>
         <div className=''>
           <Calendar className='calendar-size' onChange={onDateChange} value={dateValue} />
         </div>

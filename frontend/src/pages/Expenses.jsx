@@ -15,9 +15,7 @@ import { toast } from 'react-toastify';
 function Expenses() {
   const formInitialState = { amount: 0, note: '' };
   const [formData, setFormData] = useState(formInitialState);
-  const { expenses, isLoading, isSuccess, isError } = useSelector(
-    (state) => state.expenses
-  );
+  const { expenses, isLoading, isSuccess } = useSelector((state) => state.expenses);
   const dispatch = useDispatch();
   useEffect(() => {
     let ignore = false;
@@ -31,8 +29,10 @@ function Expenses() {
   }, []);
 
   useEffect(() => {
-    dispatch(reset());
-  }, [isSuccess]);
+    if (isSuccess) {
+      dispatch(reset());
+    }
+  }, [isSuccess, dispatch]);
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -43,11 +43,7 @@ function Expenses() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (
-      !isNaN(formData.amount) &&
-      formData.amount !== '' &&
-      formData.note !== ''
-    ) {
+    if (!isNaN(formData.amount) && formData.amount !== '' && formData.note !== '') {
       setFormData(formInitialState);
       dispatch(createExpense(formData));
     } else {
@@ -60,50 +56,36 @@ function Expenses() {
       dispatch(deleteExpense(expenseId));
     }
   };
+
+  if (isLoading) return <Spinner />;
   return (
-    <main className="dashboard-main">
-      <div className="expense-layout">
-        <div className="dashboard-table">
-          <div className="header-row-2">
+    <main className='dashboard-main'>
+      <div className='expense-layout'>
+        <div className='dashboard-table'>
+          <div className='header-row-2'>
             <p>Amount</p>
             <p>Note</p>
           </div>
-          {(isLoading && <Spinner />) || (
+          {
             <Pagination>
               {expenses.map((expense) => {
-                return (
-                  <ExpenseItem
-                    onDelete={onDelete}
-                    expense={expense}
-                    key={expense._id}
-                  />
-                );
+                return <ExpenseItem onDelete={onDelete} expense={expense} key={expense._id} />;
               })}
             </Pagination>
-          )}
+          }
         </div>
-        <div className="forsm">
-          <form action="" onSubmit={onSubmit} className="expenses-form">
-            <div className="expenses-form-group">
+        <div className='forsm'>
+          <form action='' onSubmit={onSubmit} className='expenses-form'>
+            <div className='expenses-form-group'>
               <h1>Add Expense</h1>
             </div>
-            <div className="expenses-form-group">
-              <label htmlFor="amount">Amount:</label>
-              <input
-                type="text"
-                name="amount"
-                placeholder="Amount"
-                onChange={onChange}
-              />
+            <div className='expenses-form-group'>
+              <label htmlFor='amount'>Amount:</label>
+              <input type='text' name='amount' placeholder='Amount' onChange={onChange} />
             </div>
-            <div className="expenses-form-group">
-              <label htmlFor="note">Note:</label>
-              <textarea
-                onChange={onChange}
-                name="note"
-                id="note"
-                placeholder="Add note"
-              ></textarea>
+            <div className='expenses-form-group'>
+              <label htmlFor='note'>Note:</label>
+              <textarea onChange={onChange} name='note' id='note' placeholder='Add note'></textarea>
             </div>
             <button>Submit</button>
           </form>

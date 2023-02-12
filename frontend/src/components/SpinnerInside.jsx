@@ -1,7 +1,9 @@
 function SpinnerInside() {
   return (
-    <div className="loadingSpinnerContainer">
-      <div className="loadingSpinner"></div>
+    <div className='loadingSpinnerContainer'>
+      <div className='loadingSpinnerOutterContainer'>
+        <div className='loadingSpinner'></div>
+      </div>
     </div>
   );
 }

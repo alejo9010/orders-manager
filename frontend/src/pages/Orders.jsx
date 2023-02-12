@@ -9,9 +9,7 @@ import { useNavigate } from 'react-router';
 import { getOrders, OrderReset } from '../features/orders/orderSlice';
 import SpinnerInside from '../components/SpinnerInside';
 function Orders() {
-  const { orders, isSuccess, isLoading, isError } = useSelector(
-    (state) => state.orders
-  );
+  const { orders, isSuccess, isLoading, isError } = useSelector((state) => state.orders);
   const { servers } = useSelector((state) => state.servers);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -29,18 +27,12 @@ function Orders() {
     dispatch(OrderReset());
   };
   const onDeleteOrder = (order, server) => {
-    const confirmDelete = window.confirm(
-      'You really want to delete this order?'
-    );
+    const confirmDelete = window.confirm('You really want to delete this order?');
     if (confirmDelete) {
       dispatch(deleteOrder(order._id));
-      const confirmReturnStock = window.confirm(
-        'Want to add the stock back to the server?'
-      );
+      const confirmReturnStock = window.confirm('Want to add the stock back to the server?');
       if (confirmReturnStock) {
-        dispatch(
-          setStock({ id: server._id, stock: server.stock + order.gold })
-        );
+        dispatch(setStock({ id: server._id, stock: server.stock + order.gold }));
       }
     }
   };
@@ -49,12 +41,12 @@ function Orders() {
     navigate(orderId);
   };
   return (
-    <main className="dashboard-main">
-      <div className="dashboard-container">
-        <div className="dashboard-bar"></div>
+    <main className='dashboard-main'>
+      <div className='dashboard-container'>
+        <div className='dashboard-bar'></div>
       </div>
-      <div className="dashboard-table">
-        <div className="header-row-5">
+      <div className='dashboard-table'>
+        <div className='header-row-5'>
           <div>Order#</div>
 
           <div>Game</div>

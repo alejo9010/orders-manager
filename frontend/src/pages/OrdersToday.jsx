@@ -13,6 +13,7 @@ import { FaPaste } from 'react-icons/fa';
 import Modal from 'react-modal';
 import { isCurrentDay, findServerById, numberWithCommas } from '../helpers/utilities';
 import { toast } from 'react-toastify';
+import SpinnerInside from '../components/SpinnerInside';
 const customStyles = {
   content: {
     top: '50%',
@@ -77,7 +78,7 @@ function OrdersToday() {
     if (serverIsSuccess) {
       dispatch(reset());
     }
-  }, [isSuccess, serverIsSuccess]);
+  }, [isSuccess, serverIsSuccess, isError, serverIsError]);
 
   useEffect(() => {
     let ignore = false;
@@ -91,7 +92,7 @@ function OrdersToday() {
   }, []);
   useEffect(() => {
     createDaySummary();
-  }, [orders, stockIsLoading]);
+  }, [orders]);
 
   const createDaySummary = () => {
     const todayOrders = orders.filter((order) => isCurrentDay(new Date(order.createdAt)));
@@ -198,6 +199,8 @@ function OrdersToday() {
   const openModal = () => {
     setModalIsOpen(true);
   };
+
+  if (isLoading || serverIsLoading) return <SpinnerInside />;
   return (
     <main className='dashboard-main'>
       <div className='dashboard-container'>
@@ -307,22 +310,21 @@ function OrdersToday() {
               <div>Status</div>
             </div>
 
-            {((isLoading || serverIsError) && <Spinner />) ||
-              orders.map((order) => {
-                const serverOfOrder = findServerById(servers, order.server);
-                if (isCurrentDay(new Date(order.createdAt)) && serverOfOrder) {
-                  return (
-                    <OrderItem
-                      key={order._id}
-                      server={serverOfOrder}
-                      order={order}
-                      onCloseOrder={onCloseOrder}
-                      markClosed={true}
-                      onDeleteOrder={onDeleteOrder}
-                    />
-                  );
-                }
-              })}
+            {orders.map((order) => {
+              const serverOfOrder = findServerById(servers, order.server);
+              if (isCurrentDay(new Date(order.createdAt)) && serverOfOrder) {
+                return (
+                  <OrderItem
+                    key={order._id}
+                    server={serverOfOrder}
+                    order={order}
+                    onCloseOrder={onCloseOrder}
+                    markClosed={true}
+                    onDeleteOrder={onDeleteOrder}
+                  />
+                );
+              }
+            })}
           </>
         )) ||
           ((isLoading || serverIsError) && <Spinner />) ||
