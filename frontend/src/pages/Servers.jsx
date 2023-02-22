@@ -1,14 +1,11 @@
 import Modal from 'react-modal';
 import { useEffect, useState } from 'react';
 import ServerItem from '../components/ServerItem';
-import {
-  createServer,
-  getServers,
-  reset,
-} from '../features/servers/serverSlice';
+import { createServer, getServers, reset } from '../features/servers/serverSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Spinner from '../components/SpinnerInside';
+import SpinnerInside from '../components/SpinnerInside';
 const customStyles = {
   content: {
     top: '50%',
@@ -32,9 +29,7 @@ function Servers() {
   });
 
   const { gameName, serverName } = serverData;
-  const { servers, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.servers
-  );
+  const { servers, isLoading, isError, isSuccess, message } = useSelector((state) => state.servers);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -76,53 +71,52 @@ function Servers() {
       [e.target.name]: e.target.value,
     }));
   };
+  if (isLoading) return <SpinnerInside />;
   return (
-    <main className="dashboard-main">
-      <div className="dashboard-container">
-        <div className="dashboard-bar">
-          <button className="btn-round" onClick={() => setModalIsOpen(true)}>
+    <main className='dashboard-main'>
+      <div className='dashboard-container'>
+        <div className='dashboard-bar'>
+          <button className='btn-round' onClick={() => setModalIsOpen(true)}>
             New Server
           </button>
           <Modal
             isOpen={modalIsOpen}
             onRequestClose={closeModal}
             style={customStyles}
-            contentLabel="Example Modal"
-          >
-            <form className="form" action="" onSubmit={onSubmit}>
-              <div className="form-group">
+            contentLabel='Example Modal'>
+            <form className='form' action='' onSubmit={onSubmit}>
+              <div className='form-group'>
                 <h1>New server</h1>
                 <input
-                  type="text"
-                  placeholder="Game Name"
-                  name="gameName"
+                  type='text'
+                  placeholder='Game Name'
+                  name='gameName'
                   onChange={onChange}
                   value={gameName}
                 />
                 <input
-                  type="text"
-                  placeholder="Server Name"
-                  name="serverName"
+                  type='text'
+                  placeholder='Server Name'
+                  name='serverName'
                   onChange={onChange}
                   value={serverName}
                 />
-                <button className="btn">Submit</button>
+                <button className='btn'>Submit</button>
               </div>
             </form>
           </Modal>
         </div>
-        <div className="dashboard-table">
-          <div className="header-row-3">
+        <div className='dashboard-table'>
+          <div className='header-row-3'>
             <div>Game</div>
             <div>Server</div>
             <div>Stock</div>
           </div>
-          {(isLoading && <Spinner />) ||
-            servers.map((server) => {
-              if (!server.isHidden) {
-                return <ServerItem key={server._id} server={server} />;
-              }
-            })}
+          {servers.map((server) => {
+            if (!server.isHidden) {
+              return <ServerItem key={server._id} server={server} />;
+            }
+          })}
         </div>
       </div>
     </main>

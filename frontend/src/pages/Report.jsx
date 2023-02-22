@@ -91,6 +91,8 @@ function Report() {
   };
 
   const UseSpinner = orderLoading || expensesLoading;
+
+  if (UseSpinner) return <SpinnerInside />;
   return (
     <main className='dashboard-main'>
       <div className='report-layout'>
@@ -106,7 +108,7 @@ function Report() {
               title={`${dateValue.toLocaleDateString('en-US', { weekday: 'long' })}`}
             />
           )}
-          {(UseSpinner && <SpinnerInside />) || (
+          {
             <ReportCard
               profit={ReportMonth(orders, 'profit', dateValue)}
               expenses={ReportMonth(expenses, 'amount', dateValue)}
@@ -117,7 +119,7 @@ function Report() {
               }
               title={dateValue.toLocaleDateString('en-US', { month: 'long' })}
             />
-          )}
+          }
         </div>
         <div className=''>
           <Calendar className='calendar-size' onChange={onDateChange} value={dateValue} />

@@ -128,11 +128,23 @@ function OrdersToday() {
     //set all lines into an array
     const lines = clipboardText.split('\r\n');
     //Get data sort from lines
-    // TODO: Delete this test
-    const test = +lines[lines.indexOf(' Sold Details') + 7]
-      .split('\t')[1]
-      .replace(/[^0-9\.]+/g, '');
-    debugger;
+    // DEBUGGING
+    // const server = lines[lines.findIndex((string) => string.includes('SERVER '))].substring(7);
+    // const orderNumber =
+    //   lines[lines.findIndex((string) => string.includes('SOLD ORDER №'))].substring(12);
+    // const profit = +lines[lines.indexOf(' Sold Details') + 7]
+    //   .split('\t')[1]
+    //   .replace(/[^0-9\.]+/g, '');
+    // const gold = +lines[lines.indexOf(' Sold Details') + 6]
+    //   .replaceAll('\t', ' ')
+    //   .split(' ')[0]
+    //   .replaceAll(',', '');
+    // const characterName =
+    //   lines[lines.findIndex((string) => string.includes('CHARACTER NAME '))].substring(15);
+    // debugger;
+    // const buyerName =
+    //   lines[lines.findIndex((string) => string.includes('Bought by '))].split(' ')[2];
+
     if (lines.length > 20) {
       const pasteOrder = {
         server: lines[lines.findIndex((string) => string.includes('SERVER '))].substring(7),
@@ -145,7 +157,7 @@ function OrdersToday() {
           .replaceAll(',', ''),
         characterName:
           lines[lines.findIndex((string) => string.includes('CHARACTER NAME '))].substring(15),
-        buyerName: lines[lines.indexOf('BUYER') - 1].trim(),
+        buyerName: lines[lines.findIndex((string) => string.includes('Bought by '))].split(' ')[2],
       };
       const serverExist = servers.filter(
         (s) => s.serverName === pasteOrder.server && s.isHidden === false

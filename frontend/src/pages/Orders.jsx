@@ -10,7 +10,7 @@ import { getOrders, OrderReset } from '../features/orders/orderSlice';
 import SpinnerInside from '../components/SpinnerInside';
 function Orders() {
   const { orders, isSuccess, isLoading, isError } = useSelector((state) => state.orders);
-  const { servers } = useSelector((state) => state.servers);
+  const { servers, isLoading: isLoadingServer } = useSelector((state) => state.servers);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
@@ -40,6 +40,8 @@ function Orders() {
     console.log(orderId);
     navigate(orderId);
   };
+
+  if (isLoading || isLoadingServer) return <SpinnerInside />;
   return (
     <main className='dashboard-main'>
       <div className='dashboard-container'>
@@ -56,7 +58,7 @@ function Orders() {
           <div>Status</div>
         </div>
 
-        {(isLoading && <SpinnerInside />) || (
+        {
           <Pagination>
             {orders.map((order) => {
               const serverOfOrder = findServerById(servers, order.server);
@@ -74,7 +76,7 @@ function Orders() {
               }
             })}
           </Pagination>
-        )}
+        }
       </div>
     </main>
   );
