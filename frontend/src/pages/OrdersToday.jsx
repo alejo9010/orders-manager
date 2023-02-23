@@ -68,7 +68,6 @@ function OrdersToday() {
     }
 
     if (isError) {
-      toast.error(message);
       dispatch(OrderReset());
     }
     if (serverIsError) {
@@ -190,13 +189,8 @@ function OrdersToday() {
   };
   const onOrderSubmit = (e) => {
     e.preventDefault();
-    const orderExists = orders.filter((order) => order.orderNumber === orderNumber);
     if (isNaN(profit) || isNaN(gold)) {
       toast.error('Profit and gold should be numbers');
-    } else if (gold > serverStock) {
-      toast.error('Server do not have enought stock');
-    } else if (orderExists.length > 0) {
-      toast.error(`Order ${orderNumber} exists already`);
     } else {
       dispatch(createOrder(orderData));
       dispatch(setStock({ id: orderData.server, stock: serverStock - orderData.gold }));

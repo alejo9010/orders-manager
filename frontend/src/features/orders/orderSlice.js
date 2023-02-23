@@ -16,103 +16,78 @@ const initialState = {
 };
 
 //Create new order
-export const createOrder = createAsyncThunk(
-  'order/create',
-  async (orderData, thunkAPI) => {
-    try {
-      const token = thunkAPI.getState().auth.user.token;
-      return await orderService.createOrder(orderData, token);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      toast.error(message);
-      return thunkAPI.rejectWithValue(message);
-    }
+export const createOrder = createAsyncThunk('order/create', async (orderData, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await orderService.createOrder(orderData, token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 
 //Get orders
-export const getOrders = createAsyncThunk(
-  'orders/getAll',
-  async (_, thunkAPI) => {
-    try {
-      const token = thunkAPI.getState().auth.user.token;
-      return await orderService.getOrders(token);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      toast.error(message);
-      return thunkAPI.rejectWithValue(message);
-    }
+export const getOrders = createAsyncThunk('orders/getAll', async (_, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await orderService.getOrders(token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 
 //Get order
-export const getOrder = createAsyncThunk(
-  'orders/getOrder',
-  async (orderId, thunkAPI) => {
-    try {
-      const token = thunkAPI.getState().auth.user.token;
-      return await orderService.getOrder(orderId, token);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      toast.error(message);
-      return thunkAPI.rejectWithValue(message);
-    }
+export const getOrder = createAsyncThunk('orders/getOrder', async (orderId, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await orderService.getOrder(orderId, token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 //Close order
-export const closeOrder = createAsyncThunk(
-  'order/close',
-  async (orderId, thunkAPI) => {
-    try {
-      const token = thunkAPI.getState().auth.user.token;
-      return await orderService.closeOrder(orderId, token);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      toast.error(message);
-      return thunkAPI.rejectWithValue(message);
-    }
+export const closeOrder = createAsyncThunk('order/close', async (orderId, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await orderService.closeOrder(orderId, token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 
 //Delete order
-export const deleteOrder = createAsyncThunk(
-  'order/delete',
-  async (orderId, thunkAPI) => {
-    try {
-      const token = thunkAPI.getState().auth.user.token;
-      return await orderService.deleteOrder(orderId, token);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      toast.error(message);
-      return thunkAPI.rejectWithValue(message);
-    }
+export const deleteOrder = createAsyncThunk('order/delete', async (orderId, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await orderService.deleteOrder(orderId, token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 export const orderSlice = createSlice({
   name: 'order',
   initialState,
@@ -160,6 +135,11 @@ export const orderSlice = createSlice({
         state.isSuccess = true;
         state.orders.unshift(action.payload);
       })
+      .addCase(createOrder.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
       .addCase(createOrder.pending, (state) => {
         state.isLoading = true;
       })
@@ -174,9 +154,7 @@ export const orderSlice = createSlice({
       })
       .addCase(deleteOrder.fulfilled, (state, action) => {
         state.isSuccessDelete = false;
-        const indexOfOrder = state.orders.findIndex(
-          (order) => order._id === action.payload._id
-        );
+        const indexOfOrder = state.orders.findIndex((order) => order._id === action.payload._id);
         state.orders.splice(indexOfOrder, 1);
       });
   },
