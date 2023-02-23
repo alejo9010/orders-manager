@@ -22,17 +22,26 @@ const getOrders = asyncHandler(async (req, res) => {
 // @access  Private
 const createOrder = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user.id);
+  const server = await Server.findById(req.body.server);
+  const orderExist = await Order.findOne({ orderNumber: req.body.orderNumber });
   if (!user) {
     res.status(401);
     throw new Error('User not found');
   }
-  const server = await Server.findById(req.body.server);
-
   if (server.user.toString() !== req.user.id) {
     res.status(401);
     throw new Error('User not authorized');
   }
-
+  //Server dont have stock
+  if (server.stock < req.body.gold) {
+    res.status(401);
+    throw new Error('Not enought Stock');
+  }
+  // Order already exist
+  if (orderExist) {
+    res.status(401);
+    throw new Error('Order Already Exist');
+  }
   const order = await Order.create({
     user: req.user.id,
     server: req.body.server,
@@ -65,10 +74,7 @@ const updateOrder = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error('Not Authorized');
   }
-  const updateOrder = await Order.findByIdAndUpdate(
-    req.params.orderId,
-    req.body
-  );
+  const updateOrder = await Order.findByIdAndUpdate(req.params.orderId, req.body);
   res.status(200).json(updateOrder);
 });
 

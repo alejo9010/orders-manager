@@ -78,7 +78,7 @@ function OrdersToday() {
     if (serverIsSuccess) {
       dispatch(reset());
     }
-  }, [isSuccess, serverIsSuccess, isError, serverIsError]);
+  }, [isSuccess, serverIsSuccess, isError, serverIsError, dispatch]);
 
   useEffect(() => {
     let ignore = false;
@@ -90,6 +90,7 @@ function OrdersToday() {
       ignore = true;
     };
   }, []);
+
   useEffect(() => {
     createDaySummary();
   }, [orders]);
@@ -224,7 +225,7 @@ function OrdersToday() {
               <span className='info-viewer'>Gold sold: {totalGold}</span>
               <span className='info-viewer'>Avg: {AvgGoldPrice}</span>
             </div>
-            <button className='btn-round' onClick={() => setModalIsOpen(true)}>
+            <button className='btn-round' onClick={openModal}>
               New Order
             </button>
           </div>
