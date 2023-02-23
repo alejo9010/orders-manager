@@ -62,11 +62,13 @@ function OrdersToday() {
     stockIsLoading,
   } = useSelector((state) => state.servers);
   const { orders, isLoading, isError, isSuccess, message } = useSelector((state) => state.orders);
-  useEffect(() => {
-    if (isSuccess) {
-      dispatch(OrderReset());
-    }
 
+  useEffect(() => {
+    dispatch(getServers());
+    dispatch(getOrders());
+  }, [dispatch]);
+
+  useEffect(() => {
     if (isError) {
       dispatch(OrderReset());
     }
@@ -74,25 +76,12 @@ function OrdersToday() {
       dispatch(OrderReset());
     }
 
-    if (serverIsSuccess) {
+    if (serverIsSuccess && isSuccess) {
+      dispatch(OrderReset());
       dispatch(reset());
+      createDaySummary();
     }
   }, [isSuccess, serverIsSuccess, isError, serverIsError, dispatch]);
-
-  useEffect(() => {
-    let ignore = false;
-    if (!ignore) {
-      dispatch(getServers());
-      dispatch(getOrders());
-    }
-    return () => {
-      ignore = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    createDaySummary();
-  }, [orders]);
 
   const createDaySummary = () => {
     const todayOrders = orders.filter((order) => isCurrentDay(new Date(order.createdAt)));
@@ -177,8 +166,9 @@ function OrdersToday() {
   const onCloseOrder = (id) => {
     dispatch(closeOrder(id));
   };
+
   const onDeleteOrder = (order, server) => {
-    const confirmDelete = window.confirm('You really want to delete this order?');
+    const confirmDelete = window.confirm('Do you really want to delete this order?');
     if (confirmDelete) {
       dispatch(deleteOrder(order._id));
       const confirmReturnStock = window.confirm('Want to add the stock back to the server?');
@@ -187,6 +177,7 @@ function OrdersToday() {
       }
     }
   };
+
   const onOrderSubmit = (e) => {
     e.preventDefault();
     if (isNaN(profit) || isNaN(gold)) {
@@ -203,6 +194,7 @@ function OrdersToday() {
   const closeModal = () => {
     setModalIsOpen(false);
   };
+
   const openModal = () => {
     setModalIsOpen(true);
   };
@@ -214,6 +206,7 @@ function OrdersToday() {
         <div className='dashboard-bar'>
           <div className='d-flex-100'>
             <div className='d-flex'>
+              {() => createDaySummary()}
               <span className='info-viewer'>Orders: {totalOrders}</span>
               <span className='info-viewer'>Profit: {totalProfit.toFixed(2)}</span>
               <span className='info-viewer'>Gold sold: {totalGold}</span>
