@@ -66,10 +66,11 @@ function OrdersToday() {
   useEffect(() => {
     dispatch(getServers());
     dispatch(getOrders());
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     if (isError) {
+      console.log(message);
       dispatch(OrderReset());
     }
     if (serverIsError) {

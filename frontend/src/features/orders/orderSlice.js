@@ -73,7 +73,12 @@ export const closeOrder = createAsyncThunk('order/close', async (orderId, thunkA
     return thunkAPI.rejectWithValue(message);
   }
 });
-
+//Not authorized handler
+const notAuthorizedHandler = (msg) => {
+  if (msg === 'Not authorized') {
+    localStorage.removeItem('user');
+  }
+};
 //Delete order
 export const deleteOrder = createAsyncThunk('order/delete', async (orderId, thunkAPI) => {
   try {
@@ -115,6 +120,7 @@ export const orderSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
         state.servers = null;
+        notAuthorizedHandler(action.payload);
       })
       .addCase(getOrder.pending, (state) => {
         state.isLoading = true;

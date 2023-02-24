@@ -14,106 +14,82 @@ const initialState = {
 };
 
 //Get all Servers
-export const getServers = createAsyncThunk(
-  'servers/getAll',
-  async (_, thunkAPI) => {
-    try {
-      const token = thunkAPI.getState().auth.user.token;
-      return await serverService.getServers(token);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      toast.error(message);
-      return thunkAPI.rejectWithValue(message);
-    }
+export const getServers = createAsyncThunk('servers/getAll', async (_, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await serverService.getServers(token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 //get server
-export const getServer = createAsyncThunk(
-  'servers/get-server',
-  async (serverId, thunkAPI) => {
-    try {
-      const token = thunkAPI.getState().auth.user.token;
+export const getServer = createAsyncThunk('servers/get-server', async (serverId, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
 
-      return await serverService.getServer(serverId, token);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      toast.error(message);
-      return thunkAPI.rejectWithValue(message);
-    }
+    return await serverService.getServer(serverId, token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 //Create new server
-export const createServer = createAsyncThunk(
-  'server/create',
-  async (serverData, thunkAPI) => {
-    try {
-      const token = thunkAPI.getState().auth.user.token;
-      return await serverService.createServer(serverData, token);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      toast.error(message);
-      return thunkAPI.rejectWithValue(message);
-    }
+export const createServer = createAsyncThunk('server/create', async (serverData, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await serverService.createServer(serverData, token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+    return thunkAPI.rejectWithValue(message);
   }
-);
-
+});
+//Not authorized handler
+const notAuthorizedHandler = (msg) => {
+  if (msg === 'Not authorized') {
+    localStorage.removeItem('user');
+  }
+};
 //Hide Server
-export const hideServer = createAsyncThunk(
-  'server/hide',
-  async (serverData, thunkAPI) => {
-    try {
-      const token = thunkAPI.getState().auth.user.token;
-      return await serverService.hideServer(serverData, token);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      toast.error(message);
-      return thunkAPI.rejectWithValue(message);
-    }
+export const hideServer = createAsyncThunk('server/hide', async (serverData, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await serverService.hideServer(serverData, token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 
-export const setStock = createAsyncThunk(
-  'server/set-stock',
-  async (serverData, thunkAPI) => {
-    try {
-      const token = thunkAPI.getState().auth.user.token;
-      return await serverService.setStock(
-        serverData.id,
-        serverData.stock,
-        token
-      );
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      toast.error(message);
-      return thunkAPI.rejectWithValue(message);
-    }
+export const setStock = createAsyncThunk('server/set-stock', async (serverData, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await serverService.setStock(serverData.id, serverData.stock, token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 
 export const serverSlice = createSlice({
   name: 'server',
@@ -147,6 +123,7 @@ export const serverSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
         state.servers = null;
+        notAuthorizedHandler(action.payload);
       })
       .addCase(getServer.pending, (state) => {
         state.isLoading = true;
@@ -192,9 +169,7 @@ export const serverSlice = createSlice({
         state.stockIsLoading = false;
         state.stockIsSuccess = true;
         state.servers.map((server) =>
-          server._id === action.payload._id
-            ? (server.stock = action.payload.stock)
-            : server
+          server._id === action.payload._id ? (server.stock = action.payload.stock) : server
         );
       });
   },
