@@ -52,9 +52,6 @@ function Report() {
         ...state,
         dayProfit: ReportDay(orders, 'profit'),
       }));
-      console.log(orders);
-    } else {
-      console.log('Not loaded');
     }
   }, [orderLoaded, expenesesLoaded]);
 

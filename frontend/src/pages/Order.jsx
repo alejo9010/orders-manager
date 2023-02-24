@@ -8,9 +8,7 @@ function Order() {
   const { orderId } = useParams();
   const [orderLoaded, setOrderLoaded] = useState(false);
   const [serverLoaded, setServerLoaded] = useState(false);
-  const { server, isSuccess, isLoading } = useSelector(
-    (state) => state.servers
-  );
+  const { server, isSuccess, isLoading } = useSelector((state) => state.servers);
   const {
     order,
     isSuccess: isOrderSuccess,
@@ -22,7 +20,6 @@ function Order() {
   useEffect(() => {
     let ignore = false;
     //Get order if not in the state
-    console.log('1');
     if (!orderLoaded && !ignore) {
       dispatch(getOrder(orderId));
     }
@@ -53,10 +50,10 @@ function Order() {
     return <Spinner />;
   }
   return (
-    <main className="dashboard-main">
-      <div className="grid-cols-2">
-        <div className="order-card">
-          <h1 className="title">Order</h1>
+    <main className='dashboard-main'>
+      <div className='grid-cols-2'>
+        <div className='order-card'>
+          <h1 className='title'>Order</h1>
           <hr />
           <p>Order Number: {order.orderNumber}</p>
           <p>Profit: ${order.profit}</p>
@@ -67,8 +64,8 @@ function Order() {
           <p className={`order-${order.status}`}>Status: {order.status}</p>
         </div>
         <div>
-          <div className="order-card">
-            <h1 className="title">Server</h1>
+          <div className='order-card'>
+            <h1 className='title'>Server</h1>
             <hr />
             <p>Server name: {server?.serverName}</p>
             <p>Game name: {server?.gameName}</p>

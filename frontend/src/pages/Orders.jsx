@@ -37,7 +37,6 @@ function Orders() {
     }
   };
   const onOrderDetails = (orderId) => {
-    console.log(orderId);
     navigate(orderId);
   };
 

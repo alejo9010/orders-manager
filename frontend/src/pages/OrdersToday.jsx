@@ -206,7 +206,6 @@ function OrdersToday() {
         <div className='dashboard-bar'>
           <div className='d-flex-100'>
             <div className='d-flex'>
-              {() => createDaySummary()}
               <span className='info-viewer'>Orders: {totalOrders}</span>
               <span className='info-viewer'>Profit: {totalProfit.toFixed(2)}</span>
               <span className='info-viewer'>Gold sold: {totalGold}</span>
