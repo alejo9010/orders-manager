@@ -62,7 +62,8 @@ function Expenses() {
     <main className='dashboard-main'>
       <div className='expense-layout'>
         <div className='dashboard-table'>
-          <div className='header-row-2'>
+          <div className='header-row-3'>
+            <p>Date</p>
             <p>Amount</p>
             <p>Note</p>
           </div>
