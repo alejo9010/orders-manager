@@ -8,9 +8,7 @@ const getOrders = async (token) => {
     },
   };
   const response = await axios.get(API_URL, config);
-  return response.data.sort(
-    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-  );
+  return response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 };
 
 //Create new order
@@ -31,11 +29,7 @@ const closeOrder = async (orderId, token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  const response = await axios.put(
-    API_URL + orderId,
-    { status: 'Closed' },
-    config
-  );
+  const response = await axios.put(API_URL + orderId, { status: 'Closed' }, config);
   return response.data;
 };
 

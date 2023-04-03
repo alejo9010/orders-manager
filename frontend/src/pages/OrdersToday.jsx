@@ -311,12 +311,11 @@ function OrdersToday() {
             </div>
 
             {orders.map((order) => {
-              const serverOfOrder = findServerById(servers, order.server);
-              if (isCurrentDay(new Date(order.createdAt)) && serverOfOrder) {
+              if (isCurrentDay(new Date(order.createdAt))) {
                 return (
                   <OrderItem
                     key={order._id}
-                    server={serverOfOrder}
+                    server={order.server}
                     order={order}
                     onCloseOrder={onCloseOrder}
                     markClosed={true}

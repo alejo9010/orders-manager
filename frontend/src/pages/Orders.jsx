@@ -2,26 +2,23 @@ import { useSelector, useDispatch } from 'react-redux';
 import OrderItem from '../components/OrderItem';
 import { closeOrder, deleteOrder } from '../features/orders/orderSlice';
 import { getServers, setStock } from '../features/servers/serverSlice';
-import { findServerById } from '../helpers/utilities';
 import Pagination from '../components/Pagination';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { getOrders, OrderReset } from '../features/orders/orderSlice';
 import SpinnerInside from '../components/SpinnerInside';
 function Orders() {
-  const { orders, isSuccess, isLoading, isError } = useSelector((state) => state.orders);
-  const { servers, isLoading: isLoadingServer } = useSelector((state) => state.servers);
+  const { orders, isSuccess, isLoading } = useSelector((state) => state.orders);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
     dispatch(getOrders());
-    dispatch(getServers());
   }, []);
   useEffect(() => {
     if (isSuccess) {
       dispatch(OrderReset());
     }
-  }, [isSuccess]);
+  }, [isSuccess, dispatch]);
   const onCloseOrder = (id) => {
     dispatch(closeOrder(id));
     dispatch(OrderReset());
@@ -40,7 +37,7 @@ function Orders() {
     navigate(orderId);
   };
 
-  if (isLoading || isLoadingServer) return <SpinnerInside />;
+  if (isLoading) return <SpinnerInside />;
   return (
     <main className='dashboard-main'>
       <div className='dashboard-container'>
@@ -60,19 +57,16 @@ function Orders() {
         {
           <Pagination>
             {orders.map((order) => {
-              const serverOfOrder = findServerById(servers, order.server);
-              if (serverOfOrder) {
-                return (
-                  <OrderItem
-                    key={order._id}
-                    server={serverOfOrder}
-                    order={order}
-                    onCloseOrder={onCloseOrder}
-                    onDeleteOrder={onDeleteOrder}
-                    onOrderDetails={onOrderDetails}
-                  />
-                );
-              }
+              return (
+                <OrderItem
+                  key={order._id}
+                  server={order.server}
+                  order={order}
+                  onCloseOrder={onCloseOrder}
+                  onDeleteOrder={onDeleteOrder}
+                  onOrderDetails={onOrderDetails}
+                />
+              );
             })}
           </Pagination>
         }

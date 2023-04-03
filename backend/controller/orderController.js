@@ -13,7 +13,7 @@ const getOrders = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error('User not found');
   }
-  const orders = await Order.find({ user: req.user.id });
+  const orders = await Order.find({ user: req.user.id }).populate({ path: 'server' });
   res.status(200).json(orders);
 });
 
@@ -97,7 +97,8 @@ const getOrder = asyncHandler(async (req, res) => {
     throw new Error('User not found');
   }
 
-  const order = await Order.findById(req.params.orderId);
+  const order = await Order.findById(req.params.orderId).populate({ path: 'server' });
+  console.log(order);
   if (!order) {
     res.status(404);
     throw new Error('Order not found');
